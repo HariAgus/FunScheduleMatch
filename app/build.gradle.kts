@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    // alias(libs.plugins.gms)
 }
 
 android {
-    namespace = "com.fbb.funschedulematch"
+    namespace = "com.fbb.fun"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.fbb.funschedulematch"
+        applicationId = "com.fbb.fun"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -63,4 +64,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.androidx.navigation.compose)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    // implementation(libs.firebase.analytics)
 }

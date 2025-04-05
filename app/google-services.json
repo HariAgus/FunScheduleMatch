@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "639490558144",
+    "project_id": "funapp-f964d",
+    "storage_bucket": "funapp-f964d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639490558144:android:0631e3602a9e5867c00525",
+        "android_client_info": {
+          "package_name": "com.fbb.fun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcEGPb8cnzZ0XdtjYOb2bV4WGBWCcHxm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
