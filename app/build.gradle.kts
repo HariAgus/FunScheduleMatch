@@ -1,15 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    // alias(libs.plugins.gms)
+    alias(libs.plugins.gms)
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 android {
-    namespace = "com.fbb.fun"
+    namespace = "com.fbb.funapp"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.fbb.fun"
+        applicationId = "com.fbb.funapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -69,5 +71,14 @@ dependencies {
 
     // Firebase
     implementation(platform(libs.firebase.bom))
-    // implementation(libs.firebase.analytics)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.firestore.ktx)
+
+    // Dagger Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+
 }

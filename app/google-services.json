@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:639490558144:android:0631e3602a9e5867c00525",
+        "mobilesdk_app_id": "1:639490558144:android:0b352a4959fbaa52c00525",
         "android_client_info": {
-          "package_name": "com.fbb.fun"
+          "package_name": "com.fbb.funapp"
         }
       },
       "oauth_client": [],
