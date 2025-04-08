@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +29,7 @@ import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
+import java.util.UUID
 
 
 @RequiresApi(35)
@@ -38,11 +38,11 @@ fun CreateMatchScreen(
     modifier: Modifier = Modifier,
     viewModel: MatchViewModel = hiltViewModel()
 ) {
-    var nameOfMabar by remember { mutableStateOf("") }
-    var court by remember { mutableStateOf("") }
-    var players by remember { mutableStateOf("") }
-    var totalTime by remember { mutableStateOf("") }
-    var durationPerMatch by remember { mutableStateOf("") }
+    var nameOfMabar by remember { mutableStateOf("Senin") }
+    var court by remember { mutableStateOf("2") }
+    var players by remember { mutableStateOf("16") }
+    var totalTime by remember { mutableStateOf("240") }
+    var durationPerMatch by remember { mutableStateOf("20") }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -132,6 +132,7 @@ fun CreateMatchScreen(
                     disabledContainerColor = Color.LightGray
                 ),
                 onClick = {
+                    viewModel.newSessionId = UUID.randomUUID().toString()
                     viewModel.createSchedule(
                         nameOfMabar = nameOfMabar,
                         playerCount = players.toInt(),

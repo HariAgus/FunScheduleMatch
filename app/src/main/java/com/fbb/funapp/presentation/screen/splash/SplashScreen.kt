@@ -103,7 +103,7 @@ fun SplashScreen(modifier: Modifier = Modifier, navController: NavHostController
 
             Text(
                 modifier = Modifier.padding(top = 2.dp),
-                text = "Schedule your Badminton games easily",
+                text = "Easily organize badminton schedule",
                 color = Color.White,
                 style = TypographyStyle.labelMedium.copy(fontWeight = FontWeight.Medium)
             )

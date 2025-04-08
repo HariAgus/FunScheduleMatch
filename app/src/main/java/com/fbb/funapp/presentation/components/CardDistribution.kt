@@ -12,29 +12,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.presentation.ui.theme.TextColorSubTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @Composable
-fun CardDistribution(modifier: Modifier = Modifier) {
+fun CardDistribution(modifier: Modifier = Modifier, team: Team, numberTeam: String) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         color = Color.White,
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        shadowElevation = 2.dp,
+        tonalElevation = 2.dp
     ) {
         Column(
             modifier = Modifier.padding(all = 12.dp)
         ) {
             Text(
-                text = "Team 1",
+                text = "Team $numberTeam",
                 style = TypographyStyle.bodyMedium.copy(color = TextColorSubTitleGray)
             )
 
             Text(
-                modifier = Modifier.padding(top = 2.dp),
-                text = "Player 14 - Player 9",
+                modifier = Modifier.padding(top = 4.dp),
+                text = "${team.players[0].name} - ${team.players[1].name}",
                 style = TypographyStyle.bodyLarge.copy(fontSize = 14.sp, color = Color.Black.copy(alpha = 0.8f))
             )
         }

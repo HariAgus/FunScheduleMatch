@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BgColorBlueYoung
 import com.fbb.funapp.presentation.ui.theme.TextColorTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
@@ -27,7 +28,7 @@ fun CardFormResult(
             .wrapContentHeight()
             .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        color = BgColorBlueYoung
+        color = BackgroundColorBlue.copy(alpha = 0.1f),
     ) {
         Column(
             modifier = Modifier.padding(12.dp)
