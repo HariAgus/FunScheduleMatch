@@ -28,6 +28,7 @@ import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.ColorGreen
 import com.fbb.funapp.presentation.ui.theme.ColorPurple
+import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TextColorSubTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
@@ -36,7 +37,9 @@ fun HistoryCard(modifier: Modifier = Modifier, session: Session) {
     Surface(
         modifier = modifier,
         color = Color.White,
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        shadowElevation = 2.dp,
+        tonalElevation = 2.dp
     ) {
         Column(
             modifier = Modifier
@@ -45,13 +48,37 @@ fun HistoryCard(modifier: Modifier = Modifier, session: Session) {
                 .padding(vertical = 18.dp, horizontal = 16.dp)
         ) {
             Row {
-                Text(text = session.nameOfMabar, style = TypographyStyle.titleMedium.copy(fontSize = 22.sp))
+                Text(
+                    text = session.nameOfMabar,
+                    style = TypographyStyle.titleMedium.copy(fontSize = 18.sp, color = TextColorPrimary)
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    imageVector = Icons.Default.DateRange,
+                    tint = Color.Black.copy(alpha = 0.7f),
+                    contentDescription = "Time"
+                )
+
+                Text(
+                    modifier = Modifier.padding(start = 6.dp),
+                    text = session.createdAtFormatted,
+                    style = TypographyStyle.bodyMedium.copy(
+                        fontSize = 14.sp,
+                        color = Color.Black.copy(alpha = 0.7f)
+                    )
+                )
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp)
+                    .padding(top = 12.dp)
             ) {
                 InformationCard(
                     modifier = Modifier.weight(1f),
@@ -82,32 +109,6 @@ fun HistoryCard(modifier: Modifier = Modifier, session: Session) {
                     icon = R.drawable.ic_timer,
                     iconColor = ColorPurple,
                     bgColor = ColorPurple.copy(alpha = 0.1f),
-                )
-            }
-
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = 12.dp),
-                thickness = 2.dp, color = Color.Black.copy(alpha = 0.1f)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    modifier = Modifier.size(16.dp),
-                    imageVector = Icons.Default.DateRange,
-                    tint = Color.Black.copy(alpha = 0.5f),
-                    contentDescription = "Time"
-                )
-
-                Text(
-                    modifier = Modifier.padding(start = 8.dp),
-                    text = session.createdAt.toString(),
-                    style = TypographyStyle.bodySmall.copy(
-                        color = Color.Black.copy(alpha = 0.5f)
-                    )
                 )
             }
         }

@@ -3,9 +3,14 @@ package com.fbb.funapp.di
 import com.fbb.funapp.data.remote.FirebaseDataSource
 import com.fbb.funapp.data.repository.MatchRepositoryImpl
 import com.fbb.funapp.domain.repository.MatchRepository
-import com.fbb.funapp.domain.usecase.GenerateTeamsUseCase
-import com.fbb.funapp.domain.usecase.SaveMatchDataUseCase
-import com.fbb.funapp.domain.usecase.ScheduleMatchesUseCase
+import com.fbb.funapp.domain.usecase.MatchUseCases
+import com.fbb.funapp.domain.usecase.match.GenerateTeamsUseCase
+import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
+import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
+import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
+import com.fbb.funapp.domain.usecase.match.GetTeamsUseCase
+import com.fbb.funapp.domain.usecase.match.SaveMatchDataUseCase
+import com.fbb.funapp.domain.usecase.match.ScheduleMatchesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,12 +21,6 @@ import dagger.hilt.components.SingletonComponent
 object AppModule {
 
     @Provides
-    fun provideGenerateTeamsUseCase() = GenerateTeamsUseCase()
-
-    @Provides
-    fun provideScheduleMatchesUseCase() = ScheduleMatchesUseCase()
-
-    @Provides
     fun provideFirebaseDataStore(): FirebaseDataSource = FirebaseDataSource()
 
     @Provides
@@ -30,8 +29,16 @@ object AppModule {
     ): MatchRepository = MatchRepositoryImpl(firebaseDataSource = firebaseDataSource)
 
     @Provides
-    fun provideSaveMatchDataUseCase(
+    fun provideMatchUseCases(
         repository: MatchRepository
-    ): SaveMatchDataUseCase = SaveMatchDataUseCase(repository = repository)
+    ): MatchUseCases = MatchUseCases(
+        generateTeamsUseCase = GenerateTeamsUseCase(),
+        saveMatchDataUseCase = SaveMatchDataUseCase(repository = repository),
+        scheduleMatchesUseCase = ScheduleMatchesUseCase(),
+        getHistorySessionUseCase = GetHistorySessionUseCase(repository = repository),
+        getSessionByIdUseCase = GetSessionByIdUseCase(repository = repository),
+        getTeamsUseCase = GetTeamsUseCase(repository = repository),
+        getMatchesUseCase = GetMatchesUseCase(repository = repository)
+    )
 
 }

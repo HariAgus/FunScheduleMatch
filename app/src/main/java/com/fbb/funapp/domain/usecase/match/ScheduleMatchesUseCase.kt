@@ -1,11 +1,13 @@
-package com.fbb.funapp.domain.usecase
+package com.fbb.funapp.domain.usecase.match
 
 import androidx.annotation.RequiresApi
 import com.fbb.funapp.domain.model.Match
 import com.fbb.funapp.domain.model.Team
+import java.util.Collections
 import java.util.UUID
+import javax.inject.Inject
 
-class ScheduleMatchesUseCase {
+class ScheduleMatchesUseCase @Inject constructor() {
 
     @RequiresApi(35)
     operator fun invoke(teams: List<Team>, courts: Int, totalMatches: Int): List<Match> {
@@ -27,7 +29,7 @@ class ScheduleMatchesUseCase {
                 team2 = team2,
                 courtNumber = courtNumber,
                 round = round,
-                timestamp = System.currentTimeMillis() + index * 15 * 60 * 1000L // opsional
+                timestamp = System.currentTimeMillis() + index * 15 * 60 * 1000L
             )
 
             schedule.add(match)
@@ -39,3 +41,6 @@ class ScheduleMatchesUseCase {
         return schedule
     }
 }
+
+
+

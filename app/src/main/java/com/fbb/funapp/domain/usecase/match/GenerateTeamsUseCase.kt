@@ -1,10 +1,12 @@
-package com.fbb.funapp.domain.usecase
+package com.fbb.funapp.domain.usecase.match
 
+import androidx.annotation.RequiresApi
 import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Team
 import java.util.UUID
+import javax.inject.Inject
 
-class GenerateTeamsUseCase {
+class GenerateTeamsUseCase @Inject constructor() {
 
     operator fun invoke(players: List<Player>): List<Team> {
         val shuffled = players.shuffled()

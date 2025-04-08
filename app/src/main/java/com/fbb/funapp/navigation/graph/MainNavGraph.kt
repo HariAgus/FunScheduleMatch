@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.fbb.funapp.navigation.screen.BottomNavItemScreen
+import com.fbb.funapp.presentation.components.CardMatchSchedule
+import com.fbb.funapp.presentation.screen.detailmatch.DetailMatchScreen
 import com.fbb.funapp.presentation.screen.history.HistoryScreen
 import com.fbb.funapp.presentation.screen.match.CreateMatchScreen
 
@@ -21,10 +23,14 @@ fun MainNavGraph(navController: NavHostController) {
     ) {
         composable(BottomNavItemScreen.Home.route) {
             CreateMatchScreen()
+
+            // DetailMatchScreen()
         }
 
         composable(BottomNavItemScreen.History.route) {
-            HistoryScreen()
+            // HistoryScreen()
+
+            DetailMatchScreen()
         }
 
 //        composable(BottomNavItemScreen.Profile.route) {

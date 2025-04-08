@@ -1,5 +1,6 @@
 package com.fbb.funapp.presentation.screen.match
 
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -8,9 +9,14 @@ import androidx.lifecycle.viewModelScope
 import com.fbb.funapp.domain.model.Match
 import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Session
-import com.fbb.funapp.domain.usecase.GenerateTeamsUseCase
-import com.fbb.funapp.domain.usecase.SaveMatchDataUseCase
-import com.fbb.funapp.domain.usecase.ScheduleMatchesUseCase
+import com.fbb.funapp.domain.model.Team
+import com.fbb.funapp.domain.usecase.match.GenerateTeamsUseCase
+import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
+import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
+import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
+import com.fbb.funapp.domain.usecase.match.GetTeamsUseCase
+import com.fbb.funapp.domain.usecase.match.SaveMatchDataUseCase
+import com.fbb.funapp.domain.usecase.match.ScheduleMatchesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -18,10 +24,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MatchViewModel @Inject constructor(
-    private val generateTeams: GenerateTeamsUseCase,
+    private val generateTeamsUseCase: GenerateTeamsUseCase,
     private val scheduleMatchesUseCase: ScheduleMatchesUseCase,
-    private val saveMatchDataUseCase: SaveMatchDataUseCase
+    private val saveMatchDataUseCase: SaveMatchDataUseCase,
+    private val getHistorySessionUseCase: GetHistorySessionUseCase,
+    private val getSessionByIdUseCase: GetSessionByIdUseCase,
+    private val getTeamsUseCase: GetTeamsUseCase,
+    private val getMatchesUseCase: GetMatchesUseCase,
 ) : ViewModel() {
+
+    private val sessionId = "713fe700-e6b8-4e8e-b40c-a152922e171a"
+    var newSessionId = mutableStateOf("").value
+
+    init {
+        getSessionById(sessionId = sessionId)
+        getTeamsBySession(sessionId = sessionId)
+        getMatchesBySession(sessionId = sessionId)
+    }
+
+    private val _sessions = mutableStateOf<List<Session>>(emptyList())
+    val sessions: State<List<Session>> = _sessions
+
+    private val _session = mutableStateOf(Session())
+    val session: State<Session> = _session
+
+    private val _teams = mutableStateOf<List<Team>>(emptyList())
+    val teams: State<List<Team>> = _teams
 
     private val _matches = mutableStateOf<List<Match>>(emptyList())
     val matches: State<List<Match>> = _matches
@@ -32,7 +60,7 @@ class MatchViewModel @Inject constructor(
             Player(id = UUID.randomUUID().toString(), name = "Player $it")
         }
 
-        val teams = generateTeams(players)
+        val teams = generateTeamsUseCase(players)
         val totalMatches = totalTime / durationPerMatch
         val matches = scheduleMatchesUseCase(
             teams = teams,
@@ -40,10 +68,8 @@ class MatchViewModel @Inject constructor(
             totalMatches = totalMatches
         )
 
-        _matches.value = matches
-
         val session = Session(
-            id = UUID.randomUUID().toString(),
+            id = newSessionId,
             nameOfMabar = nameOfMabar,
             totalCourts = courts,
             totalPlayers = playerCount,
@@ -59,5 +85,36 @@ class MatchViewModel @Inject constructor(
         }
     }
 
+
+    fun getHistoryMatches() {
+        viewModelScope.launch {
+            val result = getHistorySessionUseCase.invoke()
+            _sessions.value = result
+        }
+    }
+
+    fun getSessionById(sessionId: String) {
+        viewModelScope.launch {
+            val result = getSessionByIdUseCase.invoke(sessionId = sessionId)
+            _session.value = result
+            Log.d("VIEWMODEL", "getSessionById: $result")
+        }
+    }
+
+
+    fun getTeamsBySession(sessionId: String) {
+        viewModelScope.launch {
+            val result = getTeamsUseCase.invoke(sessionId = sessionId)
+            _teams.value = result
+            Log.d("VIEWMODEL", "TEAMS: $result")
+        }
+    }
+
+    fun getMatchesBySession(sessionId: String) {
+        viewModelScope.launch {
+            val result = getMatchesUseCase.invoke(sessionId = sessionId)
+            _matches.value = result
+        }
+    }
 
 }
