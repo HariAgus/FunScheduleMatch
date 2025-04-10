@@ -4,6 +4,7 @@ import com.fbb.funapp.data.remote.FirebaseDataSource
 import com.fbb.funapp.data.repository.MatchRepositoryImpl
 import com.fbb.funapp.domain.repository.MatchRepository
 import com.fbb.funapp.domain.usecase.MatchUseCases
+import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
 import com.fbb.funapp.domain.usecase.match.GenerateTeamsUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
 import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
@@ -32,6 +33,7 @@ object AppModule {
     fun provideMatchUseCases(
         repository: MatchRepository
     ): MatchUseCases = MatchUseCases(
+        generateMatchUseCase = GenerateMatchUseCase(repository = repository),
         generateTeamsUseCase = GenerateTeamsUseCase(),
         saveMatchDataUseCase = SaveMatchDataUseCase(repository = repository),
         scheduleMatchesUseCase = ScheduleMatchesUseCase(),

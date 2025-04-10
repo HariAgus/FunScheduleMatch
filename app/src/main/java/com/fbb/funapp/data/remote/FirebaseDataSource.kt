@@ -1,6 +1,8 @@
 package com.fbb.funapp.data.remote
 
+import com.fbb.funapp.domain.model.CourtMatch
 import com.fbb.funapp.domain.model.Match
+import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.utils.convertTimestampToDate
@@ -15,6 +17,68 @@ import kotlinx.coroutines.withContext
 class FirebaseDataSource {
 
     private val firestore = FirebaseFirestore.getInstance()
+
+    suspend fun saveSession(session: Session) {
+        val sessionRef = firestore.collection("sessions").document(session.id)
+
+        val sessionData = mapOf(
+            "id" to session.id,
+            "nameOfMabar" to session.nameOfMabar,
+            "totalPlayers" to session.totalPlayers,
+            "totalCourts" to session.totalCourts,
+            "totalTime" to session.totalTime,
+            "matchDuration" to session.matchDuration,
+            "createdAtFormatted" to session.createdAtFormatted,
+            "createdAt" to session.createdAt
+        )
+
+        sessionRef.set(sessionData).await()
+    }
+
+    suspend fun savePlayer(sessionId: String, player: Player) {
+        val playerMap = mapOf(
+            "id" to player.id,
+            "gamesPlayed" to player.gamesPlayed,
+            "lastPlayedRound" to player.lastPlayedRound
+        )
+
+        firestore.collection("sessions")
+            .document(sessionId)
+            .collection("players")
+            .document(player.id)
+            .set(playerMap)
+            .await()
+    }
+
+    suspend fun saveMatchRound(sessionId: String, roundNumber: Int, matches: List<CourtMatch>) {
+        val roundRef = firestore.collection("sessions")
+            .document(sessionId)
+            .collection("rounds")
+            .document(roundNumber.toString())
+
+        val roundData = mapOf(
+            "roundNumber" to roundNumber,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        roundRef.set(roundData).await()
+
+        matches.forEachIndexed { index, court ->
+            val match = mapOf(
+                "courtNumber" to index + 1,
+                "team1" to mapOf(
+                    "player1Id" to court.team1.player1.id,
+                    "player2Id" to court.team1.player2.id
+                ),
+                "team2" to mapOf(
+                    "player1Id" to court.team2.player1.id,
+                    "player2Id" to court.team2.player2.id
+                )
+            )
+
+            roundRef.collection("matches").add(match).await()
+        }
+    }
 
     suspend fun saveMatchesToFirestore(session: Session) {
         val sessionRef = firestore.collection("sessions").document(session.id)
