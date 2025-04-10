@@ -1,6 +1,5 @@
 package com.fbb.funapp.domain.usecase.match
 
-import androidx.annotation.RequiresApi
 import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Team
 import java.util.UUID

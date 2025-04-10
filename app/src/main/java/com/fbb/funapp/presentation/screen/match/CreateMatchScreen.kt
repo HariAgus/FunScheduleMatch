@@ -132,8 +132,9 @@ fun CreateMatchScreen(
                     disabledContainerColor = Color.LightGray
                 ),
                 onClick = {
-                    viewModel.newSessionId = UUID.randomUUID().toString()
+                    val sessionId = UUID.randomUUID().toString()
                     viewModel.createSchedule(
+                        sessionId = sessionId,
                         nameOfMabar = nameOfMabar,
                         playerCount = players.toInt(),
                         courts = court.toInt(),
