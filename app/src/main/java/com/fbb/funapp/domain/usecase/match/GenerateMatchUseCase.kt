@@ -12,7 +12,7 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
 
     suspend operator fun invoke(session: Session) {
         val totalRounds = session.totalTime / session.matchDuration
-        val players = (1..session.totalPlayers).map { Player( id = it.toString()) }.toMutableList()
+        val players = (1..session.totalPlayers).map { Player(id = it.toString()) }.toMutableList()
         val matchRounds = mutableListOf<MatchRound>()
         val rotatedPlayers = players.toMutableList()
 
@@ -63,7 +63,6 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
 
             repository.saveMatchRound(sessionId = session.id, roundNumber = round + 1, matches = roundMatches)
         }
-
         players.forEach { player ->
             repository.savePlayer(sessionId = session.id, player = player)
         }

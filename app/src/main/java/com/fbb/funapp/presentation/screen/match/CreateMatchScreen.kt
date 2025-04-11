@@ -1,5 +1,6 @@
 package com.fbb.funapp.presentation.screen.match
 
+import android.annotation.SuppressLint
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -31,7 +34,7 @@ import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 import java.util.UUID
 
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(35)
 @Composable
 fun CreateMatchScreen(
@@ -45,12 +48,14 @@ fun CreateMatchScreen(
     var durationPerMatch by remember { mutableStateOf("20") }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 32.dp),
         containerColor = BackgroundColorWhite
-    ) { paddingValues ->
+    ) {
         Column(
             modifier = Modifier
-                .padding(paddingValues = paddingValues)
+                .fillMaxSize()
                 .padding(horizontal = 14.dp)
         ) {
             Text(
@@ -66,84 +71,91 @@ fun CreateMatchScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            MyTextFieldTitle(
-                labelText = "",
-                title = "Name of MABAR",
-                icon = R.drawable.ic_title,
-                keyboardType = KeyboardType.Text,
-                text = nameOfMabar,
-                onValueChange = {
-                    nameOfMabar = it
-                }
-            )
-
-            MyTextFieldTitle(
-                title = "Number of Courts",
-                icon = R.drawable.ic_cards,
-                keyboardType = KeyboardType.Number,
-                text = court,
-                onValueChange = {
-                    if (it.all { char -> char.isDigit() }) {
-                        court = it
-                    }
-                }
-            )
-
-            MyTextFieldTitle(
-                title = "Players",
-                icon = R.drawable.ic_group,
-                keyboardType = KeyboardType.Number,
-                text = players,
-                onValueChange = {
-                    players = it
-                }
-            )
-
-            MyTextFieldTitle(
-                title = "Total Time (Minutes)",
-                icon = R.drawable.ic_time,
-                keyboardType = KeyboardType.Number,
-                text = totalTime,
-                onValueChange = {
-                    totalTime = it
-                }
-            )
-
-            MyTextFieldTitle(
-                title = "Duration per Match (Minutes)",
-                icon = R.drawable.ic_timer,
-                keyboardType = KeyboardType.Number,
-                text = durationPerMatch,
-                onValueChange = {
-                    durationPerMatch = it
-                }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                // enabled = false,
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = BackgroundColorBlue,
-                    disabledContainerColor = Color.LightGray
-                ),
-                onClick = {
-                    val sessionId = UUID.randomUUID().toString()
-                    viewModel.createSchedule(
-                        sessionId = sessionId,
-                        nameOfMabar = nameOfMabar,
-                        playerCount = players.toInt(),
-                        courts = court.toInt(),
-                        totalTime = totalTime.toInt(),
-                        durationPerMatch = durationPerMatch.toInt()
-                    )
-                }
+                    .verticalScroll(state = rememberScrollState())
             ) {
-                Text(text = "Create Match")
+                MyTextFieldTitle(
+                    labelText = "",
+                    title = "Name of MABAR",
+                    icon = R.drawable.ic_title,
+                    keyboardType = KeyboardType.Text,
+                    text = nameOfMabar,
+                    onValueChange = {
+                        nameOfMabar = it
+                    }
+                )
+
+                MyTextFieldTitle(
+                    title = "Number of Courts",
+                    icon = R.drawable.ic_cards,
+                    keyboardType = KeyboardType.Number,
+                    text = court,
+                    onValueChange = {
+                        if (it.all { char -> char.isDigit() }) {
+                            court = it
+                        }
+                    }
+                )
+
+                MyTextFieldTitle(
+                    title = "Players",
+                    icon = R.drawable.ic_group,
+                    keyboardType = KeyboardType.Number,
+                    text = players,
+                    onValueChange = {
+                        players = it
+                    }
+                )
+
+                MyTextFieldTitle(
+                    title = "Total Time (Minutes)",
+                    icon = R.drawable.ic_time,
+                    keyboardType = KeyboardType.Number,
+                    text = totalTime,
+                    onValueChange = {
+                        totalTime = it
+                    }
+                )
+
+                MyTextFieldTitle(
+                    title = "Duration per Match (Minutes)",
+                    icon = R.drawable.ic_timer,
+                    keyboardType = KeyboardType.Number,
+                    text = durationPerMatch,
+                    onValueChange = {
+                        durationPerMatch = it
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    // enabled = false,
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = BackgroundColorBlue,
+                        disabledContainerColor = Color.LightGray
+                    ),
+                    onClick = {
+                        val sessionId = UUID.randomUUID().toString()
+                        viewModel.createSchedule(
+                            sessionId = sessionId,
+                            nameOfMabar = nameOfMabar,
+                            playerCount = players.toInt(),
+                            courts = court.toInt(),
+                            totalTime = totalTime.toInt(),
+                            durationPerMatch = durationPerMatch.toInt()
+                        )
+                    }
+                ) {
+                    Text(text = "Create Match")
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
