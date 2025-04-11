@@ -1,7 +1,9 @@
 package com.fbb.funapp.presentation.screen
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -26,8 +28,10 @@ fun MainScreen(modifier: Modifier = Modifier, navController: NavHostController =
         ) {
             BottomBar(navController = navController)
         }
-    }) {
-        Column {
+    }) { innerPadding ->
+        Box(
+            modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding())
+        ) {
             MainNavGraph(navController = navController)
         }
     }

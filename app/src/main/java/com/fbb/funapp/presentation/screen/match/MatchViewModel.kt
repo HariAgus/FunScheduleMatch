@@ -13,7 +13,6 @@ import com.fbb.funapp.domain.usecase.match.GenerateTeamsUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
 import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
 import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
-import com.fbb.funapp.domain.usecase.match.GetTeamsUseCase
 import com.fbb.funapp.domain.usecase.match.SaveMatchDataUseCase
 import com.fbb.funapp.domain.usecase.match.ScheduleMatchesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,16 +27,13 @@ class MatchViewModel @Inject constructor(
     private val saveMatchDataUseCase: SaveMatchDataUseCase,
     private val getHistorySessionUseCase: GetHistorySessionUseCase,
     private val getSessionByIdUseCase: GetSessionByIdUseCase,
-    private val getTeamsUseCase: GetTeamsUseCase,
     private val getMatchesUseCase: GetMatchesUseCase,
 ) : ViewModel() {
 
     private val sessionId = "713fe700-e6b8-4e8e-b40c-a152922e171a"
-    // var newSessionId = mutableStateOf("").value
 
     init {
         getSessionById(sessionId = sessionId)
-        getTeamsBySession(sessionId = sessionId)
         getMatchesBySession(sessionId = sessionId)
     }
 
@@ -53,38 +49,14 @@ class MatchViewModel @Inject constructor(
     private val _matches = mutableStateOf<List<Match>>(emptyList())
     val matches: State<List<Match>> = _matches
 
-//    @RequiresApi(35)
-//    fun createSchedule(nameOfMabar: String, courts: Int, playerCount: Int, totalTime: Int, durationPerMatch: Int) {
-//        val players = (1..playerCount).map {
-//            Player(id = UUID.randomUUID().toString(), name = "Player $it")
-//        }
-//
-//        val teams = generateTeamsUseCase(players)
-//        val totalMatches = totalTime / durationPerMatch
-//        val matches = scheduleMatchesUseCase(
-//            teams = teams,
-//            courts = courts,
-//            totalMatches = totalMatches
-//        )
-//
-//        val session = Session(
-//            id = newSessionId,
-//            nameOfMabar = nameOfMabar,
-//            totalCourts = courts,
-//            totalPlayers = playerCount,
-//            totalTime = totalTime,
-//            matchDuration = durationPerMatch,
-//            teams = teams,
-//            matches = matches,
-//            createdAt = System.currentTimeMillis()
-//        )
-//
-//        viewModelScope.launch {
-//            saveMatchDataUseCase(session = session)
-//        }
-//    }
-
-    fun createSchedule(sessionId: String, nameOfMabar: String, courts: Int, playerCount: Int, totalTime: Int, durationPerMatch: Int) {
+    fun createSchedule(
+        sessionId: String,
+        nameOfMabar: String,
+        courts: Int,
+        playerCount: Int,
+        totalTime: Int,
+        durationPerMatch: Int
+    ) {
         viewModelScope.launch {
             try {
                 val session = Session(
@@ -98,12 +70,10 @@ class MatchViewModel @Inject constructor(
                 )
                 generateMatchUseCase.invoke(session = session)
             } catch (e: Exception) {
-                Log.d("VIEWMODEL", "createSchedule: ${e.message}")
+                Log.d("ViewModel", "createSchedule: ${e.message}")
             }
         }
-
     }
-
 
     fun getHistoryMatches() {
         viewModelScope.launch {
@@ -120,15 +90,6 @@ class MatchViewModel @Inject constructor(
         }
     }
 
-
-    fun getTeamsBySession(sessionId: String) {
-        viewModelScope.launch {
-            val result = getTeamsUseCase.invoke(sessionId = sessionId)
-            _teams.value = result
-            Log.d("VIEWMODEL", "TEAMS: $result")
-        }
-    }
-
     fun getMatchesBySession(sessionId: String) {
         viewModelScope.launch {
             val result = getMatchesUseCase.invoke(sessionId = sessionId)
@@ -136,4 +97,11 @@ class MatchViewModel @Inject constructor(
         }
     }
 
+}
+
+sealed class MatchScheduleState {
+    data object Idle : MatchScheduleState()
+    data object Loading : MatchScheduleState()
+    data object Success : MatchScheduleState()
+    data class Error(val message: String) : MatchScheduleState()
 }

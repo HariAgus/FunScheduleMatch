@@ -2,6 +2,7 @@ package com.fbb.funapp.navigation.graph
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
