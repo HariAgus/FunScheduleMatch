@@ -9,12 +9,9 @@ import com.fbb.funapp.domain.model.Match
 import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
-import com.fbb.funapp.domain.usecase.match.GenerateTeamsUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
 import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
 import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
-import com.fbb.funapp.domain.usecase.match.SaveMatchDataUseCase
-import com.fbb.funapp.domain.usecase.match.ScheduleMatchesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,9 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MatchViewModel @Inject constructor(
     private val generateMatchUseCase: GenerateMatchUseCase,
-    private val generateTeamsUseCase: GenerateTeamsUseCase,
-    private val scheduleMatchesUseCase: ScheduleMatchesUseCase,
-    private val saveMatchDataUseCase: SaveMatchDataUseCase,
     private val getHistorySessionUseCase: GetHistorySessionUseCase,
     private val getSessionByIdUseCase: GetSessionByIdUseCase,
     private val getMatchesUseCase: GetMatchesUseCase,
