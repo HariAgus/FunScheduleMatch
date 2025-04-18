@@ -35,8 +35,17 @@ class MatchViewModel @Inject constructor(
     private val _historyScheduleState = MutableStateFlow<HistoryScheduleState>(HistoryScheduleState.Idle)
     val historyScheduleState: StateFlow<HistoryScheduleState> = _historyScheduleState
 
+    private val _detailScheduleState = MutableStateFlow<DetailScheduleState>(DetailScheduleState.Idle)
+    val detailScheduleState: StateFlow<DetailScheduleState> = _detailScheduleState
+
+    private val _matchRoundState = MutableStateFlow<MatchRoundState>(MatchRoundState.Idle)
+    val matchRoundState: StateFlow<MatchRoundState> = _matchRoundState
+
     private var _sessionId: MutableStateFlow<String?> = MutableStateFlow(null)
     val sessionId: StateFlow<String?> = _sessionId
+
+    private val _isFormValid = MutableStateFlow(false)
+    val isFormValid: StateFlow<Boolean> = _isFormValid
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -100,20 +109,58 @@ class MatchViewModel @Inject constructor(
 
     fun getSessionById(sessionId: String) {
         viewModelScope.launch {
-            val result = getSessionByIdUseCase.invoke(sessionId = sessionId)
-            _session.value = result
+            _detailScheduleState.value = DetailScheduleState.Loading
+            try {
+                val result = getSessionByIdUseCase.invoke(sessionId = sessionId)
+                _session.value = result
+
+                _detailScheduleState.value = DetailScheduleState.Success
+            } catch (e: Exception) {
+                _detailScheduleState.value = DetailScheduleState.Error("Terjadi kesalahan, silahkan coba lagi")
+            }
         }
     }
 
     fun getMatchRounds(sessionId: String) {
         viewModelScope.launch {
-            val result = getMatchRoundUseCase.invoke(sessionId = sessionId)
-            _matchRounds.value = result
+            _matchRoundState.value = MatchRoundState.Loading
+            try {
+                val result = getMatchRoundUseCase.invoke(sessionId = sessionId)
+                _matchRounds.value = result
+
+                _matchRoundState.value = MatchRoundState.Success
+            } catch (e: Exception) {
+                _matchRoundState.value = MatchRoundState.Error("Terjadi kesalahan, silahkan coba lagi")
+            }
         }
     }
 
     fun resetMatchScheduleState() {
         _matchScheduleState.value = MatchScheduleState.Idle
+    }
+
+    fun resetHistoryScheduleState() {
+        _historyScheduleState.value = HistoryScheduleState.Idle
+    }
+
+    fun resetDetailScheduleState() {
+        _detailScheduleState.value = DetailScheduleState.Idle
+    }
+
+    fun resetMatchRoundState() {
+        _matchRoundState.value = MatchRoundState.Idle
+    }
+
+    fun validateForm(
+        name: String,
+        court: String,
+        players: String,
+        totalTime: String,
+        durationPerMatch: String
+    ) {
+        _isFormValid.value = name.isNotBlank() && court.toIntOrNull() != null &&
+                players.toIntOrNull() != null && totalTime.toIntOrNull() != null &&
+                durationPerMatch.toIntOrNull() != null
     }
 
 }
@@ -130,4 +177,18 @@ sealed class HistoryScheduleState {
     data object Loading : HistoryScheduleState()
     data object Success : HistoryScheduleState()
     data class Error(val message: String) : HistoryScheduleState()
+}
+
+sealed class DetailScheduleState {
+    data object Idle : DetailScheduleState()
+    data object Loading : DetailScheduleState()
+    data object Success : DetailScheduleState()
+    data class Error(val message: String) : DetailScheduleState()
+}
+
+sealed class MatchRoundState {
+    data object Idle : MatchRoundState()
+    data object Loading : MatchRoundState()
+    data object Success : MatchRoundState()
+    data class Error(val message: String) : MatchRoundState()
 }
