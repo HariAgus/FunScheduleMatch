@@ -30,7 +30,10 @@ class MatchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _matchScheduleState = MutableStateFlow<MatchScheduleState>(MatchScheduleState.Idle)
-    val createMatchState: StateFlow<MatchScheduleState> = _matchScheduleState
+    val matchState: StateFlow<MatchScheduleState> = _matchScheduleState
+
+    private val _historyScheduleState = MutableStateFlow<HistoryScheduleState>(HistoryScheduleState.Idle)
+    val historyScheduleState: StateFlow<HistoryScheduleState> = _historyScheduleState
 
     private var _sessionId: MutableStateFlow<String?> = MutableStateFlow(null)
     val sessionId: StateFlow<String?> = _sessionId
@@ -84,8 +87,14 @@ class MatchViewModel @Inject constructor(
 
     fun getHistoryMatches() {
         viewModelScope.launch {
-            val result = getHistorySessionUseCase.invoke()
-            _sessions.value = result
+            _historyScheduleState.value = HistoryScheduleState.Loading
+            try {
+                val result = getHistorySessionUseCase.invoke()
+                _sessions.value = result
+                _historyScheduleState.value = HistoryScheduleState.Success
+            } catch (e: Exception) {
+                _historyScheduleState.value = HistoryScheduleState.Error("Terjadi kesalahan, silahkan coba lagi")
+            }
         }
     }
 
@@ -114,4 +123,11 @@ sealed class MatchScheduleState {
     data object Loading : MatchScheduleState()
     data object Success : MatchScheduleState()
     data class Error(val message: String) : MatchScheduleState()
+}
+
+sealed class HistoryScheduleState {
+    data object Idle : HistoryScheduleState()
+    data object Loading : HistoryScheduleState()
+    data object Success : HistoryScheduleState()
+    data class Error(val message: String) : HistoryScheduleState()
 }

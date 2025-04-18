@@ -49,7 +49,7 @@ fun CreateMatchScreen(
     viewModel: MatchViewModel = hiltViewModel()
 ) {
     val mContext = LocalContext.current
-    val state by viewModel.createMatchState.collectAsState()
+    val state by viewModel.matchState.collectAsState()
 
     var sessionId by remember { mutableStateOf("") }
     var nameOfMabar by remember { mutableStateOf("Senin") }
