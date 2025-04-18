@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,20 +25,24 @@ import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HistoryScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hiltViewModel(), onClickToDetail: (String) -> Unit) {
+fun HistoryScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MatchViewModel = hiltViewModel(),
+    onClickToDetail: (String) -> Unit
+) {
 
     LaunchedEffect(key1 = true) {
         viewModel.getHistoryMatches()
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 32.dp),
         containerColor = BackgroundColorWhite
     ) { paddingValues ->
         Column(
-            modifier = Modifier
-                .padding(paddingValues = paddingValues)
-                .padding(horizontal = 14.dp)
+            modifier = Modifier.padding(horizontal = 14.dp)
         ) {
             Text(
                 modifier = Modifier.padding(top = 24.dp),
