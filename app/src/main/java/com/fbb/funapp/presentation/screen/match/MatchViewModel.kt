@@ -3,6 +3,7 @@ package com.fbb.funapp.presentation.screen.match
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fbb.funapp.domain.model.MatchRound
@@ -12,7 +13,11 @@ import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
 import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
 import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
+import com.fbb.funapp.utils.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,13 +27,16 @@ class MatchViewModel @Inject constructor(
     private val getHistorySessionUseCase: GetHistorySessionUseCase,
     private val getSessionByIdUseCase: GetSessionByIdUseCase,
     private val getMatchRoundUseCase: GetMatchRoundUseCase,
+    saveStatedHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val sessionId = "a06f427c-27b1-4348-a6f7-90a7658bf7db"
+    private var _sessionId: MutableStateFlow<String?> = MutableStateFlow(null)
+    val sessionId: StateFlow<String?> = _sessionId
 
     init {
-        getSessionById(sessionId = sessionId)
-        getMatchRounds(sessionId = sessionId)
+        viewModelScope.launch(Dispatchers.IO) {
+            _sessionId.value = saveStatedHandle.get<String>(Constant.SESSION_ID) ?: ""
+        }
     }
 
     private val _sessions = mutableStateOf<List<Session>>(emptyList())

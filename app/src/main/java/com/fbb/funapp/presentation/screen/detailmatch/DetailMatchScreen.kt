@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fbb.funapp.presentation.components.CardDistribution
 import com.fbb.funapp.presentation.components.CardFormResult
 import com.fbb.funapp.presentation.components.CardMatchSchedule
 import com.fbb.funapp.presentation.screen.match.MatchViewModel
@@ -31,11 +30,12 @@ import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 @Composable
 fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hiltViewModel()) {
 
-//    LaunchedEffect(key1 = viewModel.sessionId) {
-//        viewModel.getSessionById(sessionId = viewModel.sessionId)
-//        viewModel.getTeamsBySession(sessionId = viewModel.sessionId)
-//        viewModel.getMatchesBySession(sessionId = viewModel.sessionId)
-//    }
+    LaunchedEffect(key1 = true) {
+        val sessionId = viewModel.sessionId.value ?: "-"
+        viewModel.getSessionById(sessionId = sessionId)
+        viewModel.getMatchRounds(sessionId = sessionId)
+    }
+
     val session = viewModel.session.value
 
     Scaffold(
@@ -47,7 +47,7 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
         ) {
             Text(
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                text = "Match Schedule",
+                text = session.nameOfMabar,
                 style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
             )
 
