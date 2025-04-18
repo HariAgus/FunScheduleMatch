@@ -1,6 +1,7 @@
 package com.fbb.funapp.presentation.screen.match
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,20 +9,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,13 +45,35 @@ import java.util.UUID
 @Composable
 fun CreateMatchScreen(
     modifier: Modifier = Modifier,
+    onSuccessCreateMatch: (String) -> Unit,
     viewModel: MatchViewModel = hiltViewModel()
 ) {
+    val mContext = LocalContext.current
+    val state by viewModel.createMatchState.collectAsState()
+
+    var sessionId by remember { mutableStateOf("") }
     var nameOfMabar by remember { mutableStateOf("Senin") }
     var court by remember { mutableStateOf("2") }
     var players by remember { mutableStateOf("16") }
     var totalTime by remember { mutableStateOf("240") }
     var durationPerMatch by remember { mutableStateOf("20") }
+
+    LaunchedEffect(key1 = state) {
+        when (state) {
+            is MatchScheduleState.Success -> {
+                onSuccessCreateMatch(sessionId)
+                viewModel.resetMatchScheduleState()
+            }
+
+            is MatchScheduleState.Error -> {
+                val messageError = (state as MatchScheduleState.Error).message
+                Toast.makeText(mContext, messageError, Toast.LENGTH_SHORT).show()
+                viewModel.resetMatchScheduleState()
+            }
+
+            else -> {}
+        }
+    }
 
     Scaffold(
         modifier = modifier
@@ -82,7 +110,9 @@ fun CreateMatchScreen(
                     keyboardType = KeyboardType.Text,
                     text = nameOfMabar,
                     onValueChange = {
-                        nameOfMabar = it
+                        if (it.length <= 32) {
+                            nameOfMabar = it
+                        }
                     }
                 )
 
@@ -134,14 +164,13 @@ fun CreateMatchScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
-                    // enabled = false,
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = BackgroundColorBlue,
                         disabledContainerColor = Color.LightGray
                     ),
                     onClick = {
-                        val sessionId = UUID.randomUUID().toString()
+                        sessionId = UUID.randomUUID().toString()
                         viewModel.createSchedule(
                             sessionId = sessionId,
                             nameOfMabar = nameOfMabar,
@@ -152,7 +181,15 @@ fun CreateMatchScreen(
                         )
                     }
                 ) {
-                    Text(text = "Create Match")
+                    if (state is MatchScheduleState.Loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(text = "Create Match")
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(32.dp))

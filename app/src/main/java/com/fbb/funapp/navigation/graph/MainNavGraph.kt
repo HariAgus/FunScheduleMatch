@@ -1,7 +1,6 @@
 package com.fbb.funapp.navigation.graph
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -18,15 +17,17 @@ import com.fbb.funapp.utils.Constant
 
 @Composable
 fun MainNavGraph(navController: NavHostController) {
-    val mContext = LocalContext.current
-
     NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomNavItemScreen.Home.route
     ) {
         composable(BottomNavItemScreen.Home.route) {
-            CreateMatchScreen()
+            CreateMatchScreen(
+                onSuccessCreateMatch = { sessionId ->
+                    navController.navigate(Screen.Detail.passToDetail(sessionId = sessionId))
+                }
+            )
 
             // DetailMatchScreen()
         }
@@ -34,7 +35,7 @@ fun MainNavGraph(navController: NavHostController) {
         composable(BottomNavItemScreen.History.route) {
             HistoryScreen(
                 onClickToDetail = {
-                    navController.navigate(Screen.Detail.createRoute(sessionId = it))
+                    navController.navigate(Screen.Detail.passToDetail(sessionId = it))
                 }
             )
         }

@@ -1,6 +1,5 @@
 package com.fbb.funapp.presentation.screen.match
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
@@ -29,6 +28,9 @@ class MatchViewModel @Inject constructor(
     private val getMatchRoundUseCase: GetMatchRoundUseCase,
     saveStatedHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val _matchScheduleState = MutableStateFlow<MatchScheduleState>(MatchScheduleState.Idle)
+    val createMatchState: StateFlow<MatchScheduleState> = _matchScheduleState
 
     private var _sessionId: MutableStateFlow<String?> = MutableStateFlow(null)
     val sessionId: StateFlow<String?> = _sessionId
@@ -60,6 +62,7 @@ class MatchViewModel @Inject constructor(
         durationPerMatch: Int
     ) {
         viewModelScope.launch {
+            _matchScheduleState.value = MatchScheduleState.Loading
             try {
                 val session = Session(
                     id = sessionId,
@@ -71,8 +74,10 @@ class MatchViewModel @Inject constructor(
                     createdAt = System.currentTimeMillis()
                 )
                 generateMatchUseCase.invoke(session = session)
+
+                _matchScheduleState.value = MatchScheduleState.Success
             } catch (e: Exception) {
-                Log.d("ViewModel", "createSchedule: ${e.message}")
+                _matchScheduleState.value = MatchScheduleState.Error("Terjadi kesalahan, silahkan coba lagi")
             }
         }
     }
@@ -88,7 +93,6 @@ class MatchViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getSessionByIdUseCase.invoke(sessionId = sessionId)
             _session.value = result
-            Log.d("VIEWMODEL", "getSessionById: $result")
         }
     }
 
@@ -96,9 +100,11 @@ class MatchViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getMatchRoundUseCase.invoke(sessionId = sessionId)
             _matchRounds.value = result
-
-            Log.d("VIEWMODEL", "getMatchRounds: $result")
         }
+    }
+
+    fun resetMatchScheduleState() {
+        _matchScheduleState.value = MatchScheduleState.Idle
     }
 
 }

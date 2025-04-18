@@ -76,7 +76,7 @@ private fun FieldMatchSchedule(modifier: Modifier = Modifier, court: CourtMatch)
                 modifier = Modifier.padding(top = 4.dp)
             ) {
                 Text(
-                    text = "${court.team1.player1.id} x ${court.team1.player2.id}",
+                    text = "Player ${court.team1.player1.id} x ${court.team1.player2.id}",
                     style = TypographyStyle.bodyLarge.copy(fontSize = 14.sp, color = Color.Black.copy(alpha = 0.8f))
                 )
 
@@ -87,7 +87,7 @@ private fun FieldMatchSchedule(modifier: Modifier = Modifier, court: CourtMatch)
                 )
 
                 Text(
-                    text = "${court.team2.player1.id} x ${court.team2.player2.id}",
+                    text = "Player ${court.team2.player1.id} x ${court.team2.player2.id}",
                     style = TypographyStyle.bodyLarge.copy(fontSize = 14.sp, color = Color.Black.copy(alpha = 0.8f))
                 )
             }

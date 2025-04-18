@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,7 +49,9 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
             Text(
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp),
                 text = session.nameOfMabar,
-                style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                style = TypographyStyle.titleLarge.copy(fontSize = 18.sp, color = TextColorPrimary)
             )
 
             Surface(
