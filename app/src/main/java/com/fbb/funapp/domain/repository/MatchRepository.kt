@@ -1,7 +1,7 @@
 package com.fbb.funapp.domain.repository
 
 import com.fbb.funapp.domain.model.CourtMatch
-import com.fbb.funapp.domain.model.Match
+import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
@@ -14,5 +14,5 @@ interface MatchRepository {
     suspend fun getHistorySession(): List<Session>
     suspend fun getSessionById(sessionId: String): Session
     suspend fun getTeams(sessionId: String): List<Team>
-    suspend fun getMatches(sessionId: String): List<Match>
+    suspend fun getMatchRounds(sessionId: String): List<MatchRound>
 }

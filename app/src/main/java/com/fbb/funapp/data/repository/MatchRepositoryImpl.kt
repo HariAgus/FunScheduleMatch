@@ -2,7 +2,7 @@ package com.fbb.funapp.data.repository
 
 import com.fbb.funapp.data.remote.FirebaseDataSource
 import com.fbb.funapp.domain.model.CourtMatch
-import com.fbb.funapp.domain.model.Match
+import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
@@ -38,7 +38,7 @@ class MatchRepositoryImpl(private val firebaseDataSource: FirebaseDataSource) : 
         return firebaseDataSource.getTeams(sessionId = sessionId)
     }
 
-    override suspend fun getMatches(sessionId: String): List<Match> {
-        return firebaseDataSource.getMatches(sessionId = sessionId)
+    override suspend fun getMatchRounds(sessionId: String): List<MatchRound> {
+        return firebaseDataSource.getMatchRounds(sessionId = sessionId)
     }
 }

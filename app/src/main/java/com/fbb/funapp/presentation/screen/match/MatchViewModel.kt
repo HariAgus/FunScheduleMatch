@@ -3,16 +3,21 @@ package com.fbb.funapp.presentation.screen.match
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fbb.funapp.domain.model.Match
+import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
-import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
+import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
 import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
+import com.fbb.funapp.utils.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,14 +26,17 @@ class MatchViewModel @Inject constructor(
     private val generateMatchUseCase: GenerateMatchUseCase,
     private val getHistorySessionUseCase: GetHistorySessionUseCase,
     private val getSessionByIdUseCase: GetSessionByIdUseCase,
-    private val getMatchesUseCase: GetMatchesUseCase,
+    private val getMatchRoundUseCase: GetMatchRoundUseCase,
+    saveStatedHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val sessionId = "713fe700-e6b8-4e8e-b40c-a152922e171a"
+    private var _sessionId: MutableStateFlow<String?> = MutableStateFlow(null)
+    val sessionId: StateFlow<String?> = _sessionId
 
     init {
-        getSessionById(sessionId = sessionId)
-        getMatchesBySession(sessionId = sessionId)
+        viewModelScope.launch(Dispatchers.IO) {
+            _sessionId.value = saveStatedHandle.get<String>(Constant.SESSION_ID) ?: ""
+        }
     }
 
     private val _sessions = mutableStateOf<List<Session>>(emptyList())
@@ -40,8 +48,8 @@ class MatchViewModel @Inject constructor(
     private val _teams = mutableStateOf<List<Team>>(emptyList())
     val teams: State<List<Team>> = _teams
 
-    private val _matches = mutableStateOf<List<Match>>(emptyList())
-    val matches: State<List<Match>> = _matches
+    private val _matchRounds = mutableStateOf<List<MatchRound>>(emptyList())
+    val matchRounds: State<List<MatchRound>> = _matchRounds
 
     fun createSchedule(
         sessionId: String,
@@ -84,10 +92,12 @@ class MatchViewModel @Inject constructor(
         }
     }
 
-    fun getMatchesBySession(sessionId: String) {
+    fun getMatchRounds(sessionId: String) {
         viewModelScope.launch {
-            val result = getMatchesUseCase.invoke(sessionId = sessionId)
-            _matches.value = result
+            val result = getMatchRoundUseCase.invoke(sessionId = sessionId)
+            _matchRounds.value = result
+
+            Log.d("VIEWMODEL", "getMatchRounds: $result")
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fbb.funapp.presentation.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,14 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fbb.funapp.domain.model.Match
+import com.fbb.funapp.domain.model.CourtMatch
+import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.StrokeColor
 import com.fbb.funapp.presentation.ui.theme.TextColorSubTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @Composable
-fun CardMatchSchedule(modifier: Modifier = Modifier, match: Match, matchNumber: String) {
+fun CardMatchSchedule(modifier: Modifier = Modifier, matchRound: MatchRound, matchNumber: String) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -36,19 +38,26 @@ fun CardMatchSchedule(modifier: Modifier = Modifier, match: Match, matchNumber: 
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Time Slot $matchNumber",
+                text = "Time Slot ${matchRound.roundNumber}",
                 style = TypographyStyle.bodyLarge.copy(color = BackgroundColorBlue)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            FieldMatchSchedule(match = match)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                matchRound.courts.forEach { court ->
+                    FieldMatchSchedule(court = court)
+                }
+            }
+
         }
     }
 }
 
 @Composable
-private fun FieldMatchSchedule(modifier: Modifier = Modifier, match: Match) {
+private fun FieldMatchSchedule(modifier: Modifier = Modifier, court: CourtMatch) {
     Surface(
         modifier = modifier
             .fillMaxWidth(),
@@ -59,7 +68,7 @@ private fun FieldMatchSchedule(modifier: Modifier = Modifier, match: Match) {
             modifier = Modifier.padding(12.dp)
         ) {
             Text(
-                text = "Court ${match.courtNumber} - Match ${match.round}",
+                text = "Court ${court.courtNumber}",
                 style = TypographyStyle.bodySmall.copy(color = TextColorSubTitleGray)
             )
 
@@ -67,7 +76,7 @@ private fun FieldMatchSchedule(modifier: Modifier = Modifier, match: Match) {
                 modifier = Modifier.padding(top = 4.dp)
             ) {
                 Text(
-                    text = "${match.team1.players[0].name} x ${match.team1.players[1].name}",
+                    text = "${court.team1.player1.id} x ${court.team1.player2.id}",
                     style = TypographyStyle.bodyLarge.copy(fontSize = 14.sp, color = Color.Black.copy(alpha = 0.8f))
                 )
 
@@ -78,7 +87,7 @@ private fun FieldMatchSchedule(modifier: Modifier = Modifier, match: Match) {
                 )
 
                 Text(
-                    text = "${match.team2.players[0].name} x ${match.team2.players[1].name}",
+                    text = "${court.team2.player1.id} x ${court.team2.player2.id}",
                     style = TypographyStyle.bodyLarge.copy(fontSize = 14.sp, color = Color.Black.copy(alpha = 0.8f))
                 )
             }

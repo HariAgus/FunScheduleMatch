@@ -1,5 +1,6 @@
 package com.fbb.funapp.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,9 +33,9 @@ import com.fbb.funapp.presentation.ui.theme.TextColorSubTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @Composable
-fun HistoryCard(modifier: Modifier = Modifier, session: Session) {
+fun HistoryCard(modifier: Modifier = Modifier, session: Session, onClickToDetail: (String) -> Unit) {
     Surface(
-        modifier = modifier,
+        modifier = modifier.clickable { onClickToDetail(session.id) },
         color = Color.White,
         shape = RoundedCornerShape(12.dp),
         shadowElevation = 2.dp,
@@ -55,7 +55,9 @@ fun HistoryCard(modifier: Modifier = Modifier, session: Session) {
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -160,5 +162,5 @@ private fun InformationCard(
 @Preview
 @Composable
 private fun HistoryCardPreview() {
-    HistoryCard(session = Session(nameOfMabar = "Rabu Sehat"))
+    HistoryCard(session = Session(nameOfMabar = "Rabu Sehat"), onClickToDetail = {})
 }

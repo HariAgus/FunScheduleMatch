@@ -6,7 +6,7 @@ import com.fbb.funapp.domain.repository.MatchRepository
 import com.fbb.funapp.domain.usecase.MatchUseCases
 import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
-import com.fbb.funapp.domain.usecase.match.GetMatchesUseCase
+import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
 import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
 import com.fbb.funapp.domain.usecase.match.GetTeamsUseCase
 import dagger.Module
@@ -34,7 +34,7 @@ object AppModule {
         getHistorySessionUseCase = GetHistorySessionUseCase(repository = repository),
         getSessionByIdUseCase = GetSessionByIdUseCase(repository = repository),
         getTeamsUseCase = GetTeamsUseCase(repository = repository),
-        getMatchesUseCase = GetMatchesUseCase(repository = repository)
+        getMatchesUseCase = GetMatchRoundUseCase(repository = repository)
     )
 
 }

@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fbb.funapp.presentation.components.CardDistribution
 import com.fbb.funapp.presentation.components.CardFormResult
 import com.fbb.funapp.presentation.components.CardMatchSchedule
 import com.fbb.funapp.presentation.screen.match.MatchViewModel
@@ -31,11 +30,12 @@ import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 @Composable
 fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hiltViewModel()) {
 
-//    LaunchedEffect(key1 = viewModel.sessionId) {
-//        viewModel.getSessionById(sessionId = viewModel.sessionId)
-//        viewModel.getTeamsBySession(sessionId = viewModel.sessionId)
-//        viewModel.getMatchesBySession(sessionId = viewModel.sessionId)
-//    }
+    LaunchedEffect(key1 = true) {
+        val sessionId = viewModel.sessionId.value ?: "-"
+        viewModel.getSessionById(sessionId = sessionId)
+        viewModel.getMatchRounds(sessionId = sessionId)
+    }
+
     val session = viewModel.session.value
 
     Scaffold(
@@ -47,7 +47,7 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
         ) {
             Text(
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                text = "Match Schedule",
+                text = session.nameOfMabar,
                 style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
             )
 
@@ -99,9 +99,10 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
             }
 
             LazyColumn(
-                contentPadding = PaddingValues(top = 24.dp),
+                contentPadding = PaddingValues(top = 8.dp),
             ) {
-                item {
+                // Disable Team Distribution
+                /*item {
                     Text(
                         modifier = Modifier.padding(start = 16.dp),
                         text = "Team Distribution",
@@ -123,6 +124,7 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
 
                     Spacer(modifier = Modifier.height(10.dp))
                 }
+                */
 
                 item {
                     Spacer(modifier = Modifier.height(18.dp))
@@ -140,10 +142,10 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
-                itemsIndexed(viewModel.matches.value) { index, match ->
+                itemsIndexed(viewModel.matchRounds.value) { index, matchRound ->
                     CardMatchSchedule(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        match = match,
+                        matchRound = matchRound,
                         matchNumber = (index.plus(1)).toString()
                     )
 
