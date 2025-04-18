@@ -50,13 +50,14 @@ fun CreateMatchScreen(
 ) {
     val mContext = LocalContext.current
     val state by viewModel.matchState.collectAsState()
+    val isFormValid by viewModel.isFormValid.collectAsState()
 
     var sessionId by remember { mutableStateOf("") }
-    var nameOfMabar by remember { mutableStateOf("Senin") }
-    var court by remember { mutableStateOf("2") }
-    var players by remember { mutableStateOf("16") }
-    var totalTime by remember { mutableStateOf("240") }
-    var durationPerMatch by remember { mutableStateOf("20") }
+    var nameOfMabar by remember { mutableStateOf("") }
+    var court by remember { mutableStateOf("") }
+    var players by remember { mutableStateOf("") }
+    var totalTime by remember { mutableStateOf("") }
+    var durationPerMatch by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = state) {
         when (state) {
@@ -73,6 +74,16 @@ fun CreateMatchScreen(
 
             else -> {}
         }
+    }
+
+    LaunchedEffect(nameOfMabar, court, players, totalTime, durationPerMatch) {
+        viewModel.validateForm(
+            name = nameOfMabar,
+            court = court,
+            players = players,
+            totalTime = totalTime,
+            durationPerMatch = durationPerMatch
+        )
     }
 
     Scaffold(
@@ -164,6 +175,7 @@ fun CreateMatchScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
+                    enabled = isFormValid,
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = BackgroundColorBlue,

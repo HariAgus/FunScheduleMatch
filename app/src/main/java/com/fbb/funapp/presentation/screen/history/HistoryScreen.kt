@@ -2,6 +2,7 @@ package com.fbb.funapp.presentation.screen.history
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,8 +50,11 @@ fun HistoryScreen(
     when (state) {
         is HistoryScheduleState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = BackgroundColorWhite),
+
+                ) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = BackgroundColorBlue)
             }
         }
