@@ -29,9 +29,11 @@ fun MainNavGraph(navController: NavHostController) {
         }
 
         composable(BottomNavItemScreen.History.route) {
-            // HistoryScreen()
-
-            DetailMatchScreen()
+             HistoryScreen(
+                 onClickToDetail = {
+                     navController.navigate(Graph.DETAIL_MATCH)
+                 }
+             )
         }
 
 //        composable(BottomNavItemScreen.Profile.route) {

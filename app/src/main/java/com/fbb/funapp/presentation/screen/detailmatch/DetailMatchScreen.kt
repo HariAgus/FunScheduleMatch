@@ -99,9 +99,10 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
             }
 
             LazyColumn(
-                contentPadding = PaddingValues(top = 24.dp),
+                contentPadding = PaddingValues(top = 8.dp),
             ) {
-                item {
+                // Disable Team Distribution
+                /*item {
                     Text(
                         modifier = Modifier.padding(start = 16.dp),
                         text = "Team Distribution",
@@ -123,6 +124,7 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
 
                     Spacer(modifier = Modifier.height(10.dp))
                 }
+                */
 
                 item {
                     Spacer(modifier = Modifier.height(18.dp))
@@ -140,10 +142,10 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
                     Spacer(modifier = Modifier.height(10.dp))
                 }
 
-                itemsIndexed(viewModel.matches.value) { index, match ->
+                itemsIndexed(viewModel.matchRounds.value) { index, matchRound ->
                     CardMatchSchedule(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        match = match,
+                        matchRound = matchRound,
                         matchNumber = (index.plus(1)).toString()
                     )
 

@@ -56,7 +56,7 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
                 }
 
                 if (roundMatches.isNotEmpty()) {
-                    matchRounds.add(MatchRound(roundMatches))
+                    matchRounds.add(MatchRound(courts = roundMatches))
                 }
 
             }

@@ -1,12 +1,12 @@
 package com.fbb.funapp.data.remote
 
 import com.fbb.funapp.domain.model.CourtMatch
-import com.fbb.funapp.domain.model.Match
+import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.domain.model.Player
 import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.utils.convertTimestampToDate
-import com.fbb.funapp.utils.toMatch
+import com.fbb.funapp.utils.toCourtMatch
 import com.fbb.funapp.utils.toTeam
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -170,15 +170,27 @@ class FirebaseDataSource {
         teamsSnapshot.documents.mapNotNull { it.toTeam() }
     }
 
-    suspend fun getMatches(sessionId: String): List<Match> = withContext(Dispatchers.IO) {
-        val snapshot = firestore.collection("sessions")
+    suspend fun getMatchRounds(sessionId: String): List<MatchRound> = withContext(Dispatchers.IO) {
+        val roundsSnapshot = firestore.collection("sessions")
             .document(sessionId)
-            .collection("matches")
-            .orderBy("round", Query.Direction.ASCENDING)
+            .collection("rounds")
+            .orderBy("roundNumber")
             .get()
             .await()
 
-        snapshot.documents.mapNotNull { it.toMatch() }
+        roundsSnapshot.documents.mapNotNull { roundDoc ->
+            val roundNumber = (roundDoc.getLong("roundNumber") ?: return@mapNotNull null).toInt()
+
+            val matchesSnapshot = roundDoc.reference
+                .collection("matches")
+                .orderBy("courtNumber")
+                .get()
+                .await()
+
+            val courtMatches = matchesSnapshot.documents.mapNotNull { it.toCourtMatch() }
+
+            MatchRound(roundNumber = roundNumber, courts = courtMatches)
+        }
     }
 
 }

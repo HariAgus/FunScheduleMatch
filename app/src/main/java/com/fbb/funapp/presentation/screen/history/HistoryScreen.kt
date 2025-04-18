@@ -25,7 +25,7 @@ import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HistoryScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hiltViewModel()) {
+fun HistoryScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hiltViewModel(), onClickToDetail: (String) -> Unit) {
 
     LaunchedEffect(key1 = true) {
         viewModel.getHistoryMatches()
@@ -53,7 +53,10 @@ fun HistoryScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hil
                 contentPadding = PaddingValues(vertical = 24.dp)
             ) {
                 items(viewModel.sessions.value) { session ->
-                    HistoryCard(session = session)
+                    HistoryCard(
+                        session = session,
+                        onClickToDetail = onClickToDetail
+                    )
                 }
             }
         }
