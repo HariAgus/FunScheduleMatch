@@ -22,3 +22,21 @@
 - Firebase / Firestore
 
 ---
+
+## 🚀 How to Run the App
+
+### Prerequisites
+
+- Android Studio Hedgehog (or later)
+- Physical device or emulator (Android API 24+)
+- JDK 17+
+
+### Installation Steps
+
+1. Clone this repository:
+```
+ git clone https://github.com/HariAgus/FunScheduleMatch.git
+ cd FunScheduleMatch
+```
+2. Open the project in Android Studio.
+3. Synchronize Gradle and run the app on your emulator/device.
