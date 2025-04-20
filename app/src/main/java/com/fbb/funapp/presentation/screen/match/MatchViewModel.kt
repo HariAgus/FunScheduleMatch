@@ -71,6 +71,7 @@ class MatchViewModel @Inject constructor(
         courts: Int,
         playerCount: Int,
         totalTime: Int,
+        date: String,
         durationPerMatch: Int
     ) {
         viewModelScope.launch {
@@ -83,6 +84,7 @@ class MatchViewModel @Inject constructor(
                     totalPlayers = playerCount,
                     totalTime = totalTime,
                     matchDuration = durationPerMatch,
+                    date = date,
                     createdAt = System.currentTimeMillis()
                 )
                 generateMatchUseCase.invoke(session = session)
@@ -156,11 +158,12 @@ class MatchViewModel @Inject constructor(
         court: String,
         players: String,
         totalTime: String,
-        durationPerMatch: String
+        durationPerMatch: String,
+        date: String
     ) {
         _isFormValid.value = name.isNotBlank() && court.toIntOrNull() != null &&
                 players.toIntOrNull() != null && totalTime.toIntOrNull() != null &&
-                durationPerMatch.toIntOrNull() != null
+                durationPerMatch.toIntOrNull() != null && date.isNotBlank()
     }
 
 }

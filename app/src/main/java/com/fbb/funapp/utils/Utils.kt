@@ -16,7 +16,7 @@ fun formatMatchRoundsForSharing(session: Session, rounds: List<MatchRound>): Str
     val header = """
         *${session.nameOfMabar.uppercase()}*
         
-        📅 ${session.createdAtFormatted}
+        📅 ${session.date}
     """.trimIndent()
 
     val matchText = rounds.joinToString(separator = "\n\n") { round ->

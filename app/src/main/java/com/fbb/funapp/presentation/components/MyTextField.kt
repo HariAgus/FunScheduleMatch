@@ -1,6 +1,7 @@
 package com.fbb.funapp.presentation.components
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,14 +14,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BorderTextFieldColor
-import com.fbb.funapp.presentation.ui.theme.StrokeColor
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 
 @Composable
@@ -32,7 +32,10 @@ fun MyTextFieldTitle(
     text: String,
     onValueChange: (String) -> Unit,
     keyboardType: KeyboardType = KeyboardType.Number,
-    maxLines: Int = 1
+    maxLines: Int = 1,
+    readOnly: Boolean = false,
+    enabled: Boolean = true,
+    onClickField: (() -> Unit)? = null
 ) {
     Column {
         Text(
@@ -53,9 +56,19 @@ fun MyTextFieldTitle(
                     contentDescription = "Icon"
                 )
             },
+            readOnly = readOnly,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(bottom = 16.dp)
+                .then(
+                    if (onClickField != null) Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { onClickField() }
+                    else Modifier
+
+                ),
+            enabled = enabled,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
             singleLine = true,
             colors = OutlinedTextFieldDefaults.colors(
@@ -63,7 +76,9 @@ fun MyTextFieldTitle(
                 focusedBorderColor = BackgroundColorBlue,
                 cursorColor = BackgroundColorBlue,
                 focusedTrailingIconColor = BackgroundColorBlue,
-                unfocusedTrailingIconColor = BorderTextFieldColor
+                unfocusedTrailingIconColor = BorderTextFieldColor,
+                disabledBorderColor = BorderTextFieldColor,
+                disabledTextColor = TextColorPrimary
             ),
             shape = RoundedCornerShape(8.dp),
             maxLines = maxLines

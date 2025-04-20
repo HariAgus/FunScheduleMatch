@@ -22,10 +22,6 @@ class MatchRepositoryImpl(private val firebaseDataSource: FirebaseDataSource) : 
         firebaseDataSource.saveMatchRound(sessionId = sessionId, roundNumber = roundNumber, matches = matches)
     }
 
-    override suspend fun saveMatches(session: Session) {
-        firebaseDataSource.saveMatchesToFirestore(session)
-    }
-
     override suspend fun getHistorySession(): List<Session> {
         return firebaseDataSource.getHistorySession()
     }

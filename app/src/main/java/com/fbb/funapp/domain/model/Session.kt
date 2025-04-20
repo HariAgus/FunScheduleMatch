@@ -9,6 +9,7 @@ data class Session(
     val matchDuration: Int = 0,
     val teams: List<Team> = emptyList(),
     val matches: List<Match> = emptyList(),
+    val date: String = "",
     val createdAtFormatted: String = "-",
     val createdAt: Long = System.currentTimeMillis(),
 )

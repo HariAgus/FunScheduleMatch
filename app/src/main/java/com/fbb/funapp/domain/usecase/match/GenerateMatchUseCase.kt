@@ -23,7 +23,8 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
             val isLastRound = round == totalRounds - 1
 
             rotatedPlayers.sortWith(compareBy({ it.gamesPlayed }, { it.lastPlayedRound }))
-            val activeCandidates = rotatedPlayers.take(12).filter {
+            val requiredPlayers = session.totalCourts * 4
+            val activeCandidates = rotatedPlayers.take(requiredPlayers).filter {
                 isLastRound || round - it.lastPlayedRound >= 1
             }.toMutableList()
 
@@ -68,14 +69,6 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
         }
 
         repository.savePlayers(sessionId = session.id, players = players)
-
-        matchRounds.forEachIndexed { index, matchRound ->
-            println("Match ${index + 1}:")
-            matchRound.courts.forEachIndexed { courtIndex, court ->
-                println("${courtIndex + 1}. Court ${courtIndex + 1} = Player ${court.team1.player1.id} dan Player ${court.team1.player2.id} VS Player ${court.team2.player1.id} dan Player ${court.team2.player2.id}")
-            }
-            println()
-        }
     }
 
 }

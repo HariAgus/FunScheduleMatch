@@ -36,6 +36,7 @@ fun DocumentSnapshot.toSession(): Session = Session(
     totalCourts = getLong("totalCourts")?.toInt() ?: 0,
     totalTime = getLong("totalTime")?.toInt() ?: 0,
     matchDuration = getLong("matchDuration")?.toInt() ?: 0,
+    date = getString("date") ?: "-",
     createdAtFormatted = convertTimestampToDate(getLong("createdAt") ?: 0)
 )
 
