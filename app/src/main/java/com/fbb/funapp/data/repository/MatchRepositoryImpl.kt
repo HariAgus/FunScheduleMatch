@@ -14,8 +14,8 @@ class MatchRepositoryImpl(private val firebaseDataSource: FirebaseDataSource) : 
         firebaseDataSource.saveSession(session = session)
     }
 
-    override suspend fun savePlayer(sessionId: String, player: Player) {
-        firebaseDataSource.savePlayer(sessionId = sessionId, player = player)
+    override suspend fun savePlayers(sessionId: String, players: List<Player>) {
+        firebaseDataSource.saveAllPlayer(sessionId = sessionId, players = players)
     }
 
     override suspend fun saveMatchRound(sessionId: String, roundNumber: Int, matches: List<CourtMatch>) {

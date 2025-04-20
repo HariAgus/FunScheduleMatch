@@ -28,10 +28,12 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
             }.toMutableList()
 
             while (activeCandidates.size >= 4 && roundMatches.size < session.totalCourts) {
-                val selected = activeCandidates.take(4)
+                val selected = activeCandidates.shuffled().take(4)
 
                 val combinations = listOf(
-                    Team(player1 = selected[0], player2 = selected[1]) to Team(
+                    Team(
+                        player1 = selected[0], player2 = selected[1]
+                    ) to Team(
                         player1 = selected[2],
                         player2 = selected[3]
                     ),
@@ -63,9 +65,8 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
 
             repository.saveMatchRound(sessionId = session.id, roundNumber = round + 1, matches = roundMatches)
         }
-        players.forEach { player ->
-            repository.savePlayer(sessionId = session.id, player = player)
-        }
+
+        repository.savePlayers(sessionId = session.id, players = players)
 
     }
 
