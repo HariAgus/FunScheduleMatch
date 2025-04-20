@@ -1,6 +1,7 @@
 package com.fbb.funapp.presentation.screen.match
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -19,8 +20,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,8 +52,12 @@ import com.fbb.funapp.utils.AnimatedPreloader
 import com.fbb.funapp.utils.randomLoadingText
 import com.fbb.funapp.utils.randomLoadingTitle
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(35)
 @Composable
@@ -58,13 +69,18 @@ fun CreateMatchScreen(
 ) {
     val state by viewModel.matchState.collectAsState()
     val isFormValid by viewModel.isFormValid.collectAsState()
+    var isButtonClicked by remember { mutableStateOf(false) }
 
     var sessionId by remember { mutableStateOf("") }
     var nameOfMabar by remember { mutableStateOf("") }
     var court by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
     var players by remember { mutableStateOf("") }
     var totalTime by remember { mutableStateOf("") }
     var durationPerMatch by remember { mutableStateOf("") }
+
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = System.currentTimeMillis())
+    val showDate = remember { mutableStateOf(false) }
 
     LaunchedEffect(nameOfMabar, court, players, totalTime, durationPerMatch) {
         viewModel.validateForm(
@@ -72,8 +88,28 @@ fun CreateMatchScreen(
             court = court,
             players = players,
             totalTime = totalTime,
-            durationPerMatch = durationPerMatch
+            durationPerMatch = durationPerMatch,
+            date = date
         )
+    }
+
+    LaunchedEffect(key1 = isButtonClicked) {
+        if (isButtonClicked) {
+            delay(1500)
+
+            sessionId = UUID.randomUUID().toString()
+            viewModel.createSchedule(
+                sessionId = sessionId,
+                nameOfMabar = nameOfMabar,
+                playerCount = players.toInt(),
+                courts = court.toInt(),
+                totalTime = totalTime.toInt(),
+                durationPerMatch = durationPerMatch.toInt(),
+                date = date
+            )
+
+            isButtonClicked = false
+        }
     }
 
     LaunchedEffect(state) {
@@ -200,6 +236,20 @@ fun CreateMatchScreen(
                             )
 
                             MyTextFieldTitle(
+                                title = "Play Date",
+                                icon = R.drawable.ic_calendar,
+                                keyboardType = KeyboardType.Text,
+                                text = date,
+                                onValueChange = {},
+                                readOnly = true,
+                                enabled = false,
+                                onClickField = {
+                                    Log.d("DATE_PICKER", "Clicked!")
+                                    showDate.value = true
+                                }
+                            )
+
+                            MyTextFieldTitle(
                                 title = "Players",
                                 icon = R.drawable.ic_group,
                                 keyboardType = KeyboardType.Number,
@@ -229,13 +279,12 @@ fun CreateMatchScreen(
                                 }
                             )
 
-                            // Spacer(modifier = Modifier.height(24.dp))
-
                             Spacer(modifier = Modifier.weight(1f))
 
                             Button(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .padding(top = 24.dp)
                                     .height(48.dp),
                                 enabled = isFormValid,
                                 shape = RoundedCornerShape(8.dp),
@@ -244,21 +293,57 @@ fun CreateMatchScreen(
                                     disabledContainerColor = Color.LightGray
                                 ),
                                 onClick = {
-                                    sessionId = UUID.randomUUID().toString()
-                                    viewModel.createSchedule(
-                                        sessionId = sessionId,
-                                        nameOfMabar = nameOfMabar,
-                                        playerCount = players.toInt(),
-                                        courts = court.toInt(),
-                                        totalTime = totalTime.toInt(),
-                                        durationPerMatch = durationPerMatch.toInt()
-                                    )
+                                    isButtonClicked = true
                                 }
                             ) {
-                                Text(text = "Create Match")
+                                if (isButtonClicked) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(24.dp),
+                                        color = Color.White,
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Text(text = "Create Match")
+                                }
+
                             }
 
                             Spacer(modifier = Modifier.height(32.dp))
+                        }
+                    }
+
+                    if (showDate.value) {
+                        DatePickerDialog(
+                            colors = DatePickerDefaults.colors(containerColor = BackgroundColorWhite),
+                            onDismissRequest = {
+                                showDate.value = false
+                            }, confirmButton = {
+                                Button(
+                                    modifier = Modifier.padding(all = 8.dp),
+                                    onClick = {
+                                        val selectedMillis = datePickerState.selectedDateMillis
+                                        val formatter = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+                                        date = selectedMillis?.let { formatter.format(Date(it)) } ?: ""
+                                        showDate.value = false
+                                    }
+                                ) {
+                                    Text("Confirm")
+                                }
+                            },
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            DatePicker(
+                                state = datePickerState,
+                                modifier = Modifier.fillMaxWidth(),
+                                title = {
+                                    Text("Select a date", modifier = Modifier.padding(16.dp))
+                                },
+                                headline = {
+                                    Text("Today's date", modifier = Modifier.padding(16.dp))
+                                },
+                                showModeToggle = true,
+                                colors = DatePickerDefaults.colors(containerColor = BackgroundColorWhite)
+                            )
                         }
                     }
                 }

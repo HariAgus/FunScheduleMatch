@@ -72,7 +72,7 @@ fun HistoryCard(modifier: Modifier = Modifier, session: Session, onClickToDetail
 
                 Text(
                     modifier = Modifier.padding(start = 6.dp),
-                    text = session.createdAtFormatted,
+                    text = session.date,
                     style = TypographyStyle.bodyMedium.copy(
                         fontSize = 14.sp,
                         color = Color.Black.copy(alpha = 0.7f)
