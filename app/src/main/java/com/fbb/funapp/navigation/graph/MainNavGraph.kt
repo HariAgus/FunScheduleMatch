@@ -1,6 +1,8 @@
 package com.fbb.funapp.navigation.graph
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -13,23 +15,30 @@ import com.fbb.funapp.navigation.screen.Screen
 import com.fbb.funapp.presentation.screen.detailmatch.DetailMatchScreen
 import com.fbb.funapp.presentation.screen.history.HistoryScreen
 import com.fbb.funapp.presentation.screen.match.CreateMatchScreen
+import com.fbb.funapp.presentation.screen.match.MatchViewModel
 import com.fbb.funapp.utils.Constant
 
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph(
+    navController: NavHostController, shouldShowBottomBar: MutableState<Boolean>
+) {
     NavHost(
         navController = navController,
         route = Graph.MAIN,
         startDestination = BottomNavItemScreen.Home.route
     ) {
         composable(BottomNavItemScreen.Home.route) {
+            val sharedViewModel: MatchViewModel = hiltViewModel()
+
             CreateMatchScreen(
-                onSuccessCreateMatch = { sessionId ->
+                viewModel = sharedViewModel,
+                onSuccessToDetailMatch = { sessionId ->
                     navController.navigate(Screen.Detail.passToDetail(sessionId = sessionId))
+                },
+                onBottomBarVisibilityChanged = {
+                    shouldShowBottomBar.value = it
                 }
             )
-
-            // DetailMatchScreen()
         }
 
         composable(BottomNavItemScreen.History.route) {

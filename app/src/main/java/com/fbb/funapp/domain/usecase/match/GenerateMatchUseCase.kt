@@ -28,7 +28,7 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
             }.toMutableList()
 
             while (activeCandidates.size >= 4 && roundMatches.size < session.totalCourts) {
-                val selected = activeCandidates.shuffled().take(4)
+                val selected = activeCandidates.take(4).shuffled()
 
                 val combinations = listOf(
                     Team(
@@ -56,18 +56,26 @@ class GenerateMatchUseCase @Inject constructor(private val repository: MatchRepo
                     player.lastPlayedRound = round
                     activeCandidates.remove(player)
                 }
-
-                if (roundMatches.isNotEmpty()) {
-                    matchRounds.add(MatchRound(courts = roundMatches))
-                }
-
             }
+
+            if (roundMatches.isNotEmpty()) {
+                matchRounds.add(MatchRound(courts = roundMatches))
+            }
+
+            rotatedPlayers.add(rotatedPlayers.removeAt(0))
 
             repository.saveMatchRound(sessionId = session.id, roundNumber = round + 1, matches = roundMatches)
         }
 
         repository.savePlayers(sessionId = session.id, players = players)
 
+        matchRounds.forEachIndexed { index, matchRound ->
+            println("Match ${index + 1}:")
+            matchRound.courts.forEachIndexed { courtIndex, court ->
+                println("${courtIndex + 1}. Court ${courtIndex + 1} = Player ${court.team1.player1.id} dan Player ${court.team1.player2.id} VS Player ${court.team2.player1.id} dan Player ${court.team2.player2.id}")
+            }
+            println()
+        }
     }
 
 }
