@@ -1,6 +1,7 @@
 package com.fbb.funapp.presentation.screen.detailmatch
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,12 +36,16 @@ import com.fbb.funapp.presentation.screen.match.DetailScheduleState
 import com.fbb.funapp.presentation.screen.match.MatchRoundState
 import com.fbb.funapp.presentation.screen.match.MatchViewModel
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
+import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.BgColorWhiteSecond
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @Composable
-fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel = hiltViewModel()) {
+fun DetailMatchScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MatchViewModel = hiltViewModel()
+) {
 
     val mContext = LocalContext.current
 
@@ -57,7 +62,9 @@ fun DetailMatchScreen(modifier: Modifier = Modifier, viewModel: MatchViewModel =
     when (state) {
         is DetailScheduleState.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(BackgroundColorWhite)
             ) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = BackgroundColorBlue)
             }
