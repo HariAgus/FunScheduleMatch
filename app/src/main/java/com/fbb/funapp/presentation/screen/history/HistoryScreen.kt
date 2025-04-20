@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,12 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.fbb.funapp.R
 import com.fbb.funapp.presentation.components.HistoryCard
 import com.fbb.funapp.presentation.screen.match.HistoryScheduleState
 import com.fbb.funapp.presentation.screen.match.MatchViewModel
@@ -32,6 +36,9 @@ import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
+import com.fbb.funapp.utils.AnimatedPreloader
+import com.fbb.funapp.utils.randomEmptyStateTitle
+import com.fbb.funapp.utils.randomLoadingTitle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -65,6 +72,9 @@ fun HistoryScreen(
         }
 
         is HistoryScheduleState.Success -> {
+            val dataSession = viewModel.sessions.value
+            val textEmpty = remember { randomEmptyStateTitle() }
+
             Scaffold(
                 modifier = modifier
                     .fillMaxSize()
@@ -80,17 +90,50 @@ fun HistoryScreen(
                         style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
                     )
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        contentPadding = PaddingValues(vertical = 24.dp)
-                    ) {
-                        items(viewModel.sessions.value) { session ->
-                            HistoryCard(
-                                session = session,
-                                onClickToDetail = onClickToDetail
-                            )
+                    if (dataSession.isNotEmpty()) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            contentPadding = PaddingValues(vertical = 24.dp)
+                        ) {
+                            items(viewModel.sessions.value) { session ->
+                                HistoryCard(
+                                    session = session,
+                                    onClickToDetail = onClickToDetail
+                                )
+                            }
+                        }
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = BackgroundColorWhite),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                modifier = Modifier.align(Alignment.Center)
+                            ) {
+                                AnimatedPreloader(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .size(200.dp),
+                                    lottieRes = R.raw.lottie_cat_dance
+                                )
+
+                                Text(
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally)
+                                        .padding(horizontal = 32.dp)
+                                        .padding(top = 6.dp),
+                                    text = textEmpty,
+                                    style = TypographyStyle.bodySmall.copy(
+                                        fontSize = 16.sp,
+                                        color = TextColorPrimary
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
                     }
                 }
