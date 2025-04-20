@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -68,6 +69,7 @@ fun CreateMatchScreen(
 ) {
     val state by viewModel.matchState.collectAsState()
     val isFormValid by viewModel.isFormValid.collectAsState()
+    var isButtonClicked by remember { mutableStateOf(false) }
 
     var sessionId by remember { mutableStateOf("") }
     var nameOfMabar by remember { mutableStateOf("") }
@@ -89,6 +91,25 @@ fun CreateMatchScreen(
             durationPerMatch = durationPerMatch,
             date = date
         )
+    }
+
+    LaunchedEffect(key1 = isButtonClicked) {
+        if (isButtonClicked) {
+            delay(1500)
+
+            sessionId = UUID.randomUUID().toString()
+            viewModel.createSchedule(
+                sessionId = sessionId,
+                nameOfMabar = nameOfMabar,
+                playerCount = players.toInt(),
+                courts = court.toInt(),
+                totalTime = totalTime.toInt(),
+                durationPerMatch = durationPerMatch.toInt(),
+                date = date
+            )
+
+            isButtonClicked = false
+        }
     }
 
     LaunchedEffect(state) {
@@ -215,7 +236,7 @@ fun CreateMatchScreen(
                             )
 
                             MyTextFieldTitle(
-                                title = "Date",
+                                title = "Play Date",
                                 icon = R.drawable.ic_calendar,
                                 keyboardType = KeyboardType.Text,
                                 text = date,
@@ -272,19 +293,19 @@ fun CreateMatchScreen(
                                     disabledContainerColor = Color.LightGray
                                 ),
                                 onClick = {
-                                    sessionId = UUID.randomUUID().toString()
-                                    viewModel.createSchedule(
-                                        sessionId = sessionId,
-                                        nameOfMabar = nameOfMabar,
-                                        playerCount = players.toInt(),
-                                        courts = court.toInt(),
-                                        totalTime = totalTime.toInt(),
-                                        durationPerMatch = durationPerMatch.toInt(),
-                                        date = date
-                                    )
+                                    isButtonClicked = true
                                 }
                             ) {
-                                Text(text = "Create Match")
+                                if (isButtonClicked) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(24.dp),
+                                        color = Color.White,
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Text(text = "Create Match")
+                                }
+
                             }
 
                             Spacer(modifier = Modifier.height(32.dp))

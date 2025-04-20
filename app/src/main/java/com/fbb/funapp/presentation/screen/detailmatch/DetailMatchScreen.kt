@@ -3,6 +3,7 @@ package com.fbb.funapp.presentation.screen.detailmatch
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -95,8 +96,10 @@ fun DetailMatchScreen(
                         containerColor = BackgroundColorBlue,
                         shape = CircleShape,
                         onClick = {
-                            val message =
-                                formatMatchRoundsForSharing(session = session, rounds = viewModel.matchRounds.value)
+                            val message = formatMatchRoundsForSharing(
+                                session = session,
+                                rounds = viewModel.matchRounds.value
+                            )
 
                             shareToWhatsApp(mContext, message)
                         }

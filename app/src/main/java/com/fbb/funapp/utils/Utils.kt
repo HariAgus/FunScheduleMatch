@@ -70,18 +70,19 @@ fun randomLoadingText(): String {
 
 fun randomEmptyStateTitle(): String {
     val titles = listOf(
-        "Maaf datanya nggak ada nih..",
-        "Belum ada data yang bisa ditampilkan",
-        "Data masih kosong nih 😅",
-        "Hmm.. belum ada apa-apa di sini",
-        "Ups! Nggak nemu datanya",
-        "Belum ada hasil nih.. coba lagi nanti ya!",
-        "Sepertinya masih sepi di sini 🤔",
-        "Data belum tersedia untuk sekarang",
-        "Kayaknya kamu belum bikin apa-apa deh",
-        "Nggak ada yang bisa ditampilkan saat ini"
+        "Kosong... seperti harapan aku ke dia 😔",
+        "Belum ada data, kayak dia yang belum peka",
+        "Ini kosong... tapi nggak se-kosong hati yang ditinggal pas sayang-sayangnya",
+        "Data nggak ada, tapi kenangan sama dia masih penuh",
+        "Belum ada jadwal, kayak hubungan kita yang nggak pernah jelas",
+        "Ini kosong ya... tapi nggak seperih waktu dia bilang 'kita temenan aja'",
+        "Nggak ada data. Sama kayak chat kamu yang cuma dibaca doang",
+        "Belum ada yang masuk... mirip kamu di hatinya 😢",
+        "Data belum ada, tapi luka lama masih ada",
+        "Sepi banget... mirip inbox kamu waktu nunggu dia nge-chat"
     )
     return titles.random()
 }
+
 
 

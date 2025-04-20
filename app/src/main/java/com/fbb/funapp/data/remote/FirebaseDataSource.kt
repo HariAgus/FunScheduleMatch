@@ -113,6 +113,7 @@ class FirebaseDataSource {
             totalCourts = snapshot.getLong("totalCourts")?.toInt() ?: 0,
             totalTime = snapshot.getLong("totalTime")?.toInt() ?: 0,
             matchDuration = snapshot.getLong("matchDuration")?.toInt() ?: 0,
+            date = snapshot.getString("date") ?: "-",
             createdAtFormatted = convertTimestampToDate(timestamp = snapshot.getLong("createdAt") ?: 0)
         )
     }
