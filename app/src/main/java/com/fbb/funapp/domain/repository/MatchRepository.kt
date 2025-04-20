@@ -8,7 +8,7 @@ import com.fbb.funapp.domain.model.Team
 
 interface MatchRepository {
     suspend fun saveSession(session: Session)
-    suspend fun savePlayer(sessionId: String, player: Player)
+    suspend fun savePlayers(sessionId: String, players: List<Player>)
     suspend fun saveMatchRound(sessionId: String, roundNumber: Int, matches: List<CourtMatch>)
     suspend fun saveMatches(session: Session)
     suspend fun getHistorySession(): List<Session>

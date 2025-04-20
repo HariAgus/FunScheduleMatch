@@ -7,10 +7,14 @@ import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.utils.convertTimestampToDate
 import com.fbb.funapp.utils.toCourtMatch
+import com.fbb.funapp.utils.toSession
 import com.fbb.funapp.utils.toTeam
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -33,51 +37,6 @@ class FirebaseDataSource {
         )
 
         sessionRef.set(sessionData).await()
-    }
-
-    suspend fun savePlayer(sessionId: String, player: Player) {
-        val playerMap = mapOf(
-            "id" to player.id,
-            "gamesPlayed" to player.gamesPlayed,
-            "lastPlayedRound" to player.lastPlayedRound
-        )
-
-        firestore.collection("sessions")
-            .document(sessionId)
-            .collection("players")
-            .document(player.id)
-            .set(playerMap)
-            .await()
-    }
-
-    suspend fun saveMatchRound(sessionId: String, roundNumber: Int, matches: List<CourtMatch>) {
-        val roundRef = firestore.collection("sessions")
-            .document(sessionId)
-            .collection("rounds")
-            .document(roundNumber.toString())
-
-        val roundData = mapOf(
-            "roundNumber" to roundNumber,
-            "timestamp" to System.currentTimeMillis()
-        )
-
-        roundRef.set(roundData).await()
-
-        matches.forEachIndexed { index, court ->
-            val match = mapOf(
-                "courtNumber" to index + 1,
-                "team1" to mapOf(
-                    "player1Id" to court.team1.player1.id,
-                    "player2Id" to court.team1.player2.id
-                ),
-                "team2" to mapOf(
-                    "player1Id" to court.team2.player1.id,
-                    "player2Id" to court.team2.player2.id
-                )
-            )
-
-            roundRef.collection("matches").add(match).await()
-        }
     }
 
     suspend fun saveMatchesToFirestore(session: Session) {
@@ -124,23 +83,64 @@ class FirebaseDataSource {
         }
     }
 
+    suspend fun saveAllPlayer(sessionId: String, players: List<Player>) = coroutineScope {
+        val batch = firestore.batch()
+        val playerRef = firestore.collection("sessions").document(sessionId).collection("players")
+
+        players.forEach { player ->
+            val docRef = playerRef.document(player.id)
+            val playerMap = mapOf(
+                "id" to player.id,
+                "name" to player.name,
+                "gamesPlayed" to player.gamesPlayed,
+                "lastPlayedRound" to player.lastPlayedRound
+            )
+            batch.set(docRef, playerMap)
+        }
+
+        batch.commit().await()
+    }
+
+    suspend fun saveMatchRound(sessionId: String, roundNumber: Int, matches: List<CourtMatch>) {
+        val roundRef = firestore.collection("sessions")
+            .document(sessionId)
+            .collection("rounds")
+            .document(roundNumber.toString())
+
+        val roundData = mapOf(
+            "roundNumber" to roundNumber,
+            "timestamp" to System.currentTimeMillis()
+        )
+
+        roundRef.set(roundData).await()
+
+        val batch = firestore.batch()
+        matches.forEachIndexed { index, court ->
+            val match = mapOf(
+                "courtNumber" to index + 1,
+                "team1" to mapOf(
+                    "player1Id" to court.team1.player1.id,
+                    "player2Id" to court.team1.player2.id
+                ),
+                "team2" to mapOf(
+                    "player1Id" to court.team2.player1.id,
+                    "player2Id" to court.team2.player2.id
+                )
+            )
+            val matchRef = roundRef.collection("matches").document()
+            batch.set(matchRef, match)
+        }
+
+        batch.commit().await()
+    }
+
     suspend fun getHistorySession(): List<Session> = withContext(Dispatchers.IO) {
-        val snapshot = firestore.collection("sessions")
+        firestore.collection("sessions")
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .get()
             .await()
-
-        snapshot.documents.map { doc ->
-            Session(
-                id = doc.id,
-                nameOfMabar = doc.getString("nameOfMabar") ?: "-",
-                totalPlayers = doc.getLong("totalPlayers")?.toInt() ?: 0,
-                totalCourts = doc.getLong("totalCourts")?.toInt() ?: 0,
-                totalTime = doc.getLong("totalTime")?.toInt() ?: 0,
-                matchDuration = doc.getLong("matchDuration")?.toInt() ?: 0,
-                createdAtFormatted = convertTimestampToDate(timestamp = doc.getLong("createdAt") ?: 0)
-            )
-        }
+            .documents
+            .map { it.toSession() }
     }
 
     suspend fun getSessionById(sessionId: String): Session = withContext(Dispatchers.IO) {
@@ -170,7 +170,7 @@ class FirebaseDataSource {
         teamsSnapshot.documents.mapNotNull { it.toTeam() }
     }
 
-    suspend fun getMatchRounds(sessionId: String): List<MatchRound> = withContext(Dispatchers.IO) {
+    suspend fun getMatchRounds(sessionId: String): List<MatchRound> = coroutineScope {
         val roundsSnapshot = firestore.collection("sessions")
             .document(sessionId)
             .collection("rounds")
@@ -178,19 +178,24 @@ class FirebaseDataSource {
             .get()
             .await()
 
-        roundsSnapshot.documents.mapNotNull { roundDoc ->
-            val roundNumber = (roundDoc.getLong("roundNumber") ?: return@mapNotNull null).toInt()
+        val roundTasks = roundsSnapshot.documents.map { roundDoc ->
+            async {
+                val roundNumber = (roundDoc.getLong("roundNumber") ?: return@async null).toInt()
 
-            val matchesSnapshot = roundDoc.reference
-                .collection("matches")
-                .orderBy("courtNumber")
-                .get()
-                .await()
+                val matchesSnapshot = roundDoc.reference
+                    .collection("matches")
+                    .orderBy("courtNumber")
+                    .get()
+                    .await()
 
-            val courtMatches = matchesSnapshot.documents.mapNotNull { it.toCourtMatch() }
+                val courtMatches = matchesSnapshot.documents.mapNotNull { it.toCourtMatch() }
 
-            MatchRound(roundNumber = roundNumber, courts = courtMatches)
+                MatchRound(roundNumber = roundNumber, courts = courtMatches)
+            }
         }
+
+        roundTasks.awaitAll().filterNotNull()
     }
+
 
 }

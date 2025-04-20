@@ -2,6 +2,7 @@ package com.fbb.funapp.utils
 
 import com.fbb.funapp.domain.model.CourtMatch
 import com.fbb.funapp.domain.model.Player
+import com.fbb.funapp.domain.model.Session
 import com.fbb.funapp.domain.model.Team
 import com.google.firebase.firestore.DocumentSnapshot
 
@@ -27,6 +28,17 @@ fun DocumentSnapshot.toTeam(): Team? {
         null
     }
 }
+
+fun DocumentSnapshot.toSession(): Session = Session(
+    id = id,
+    nameOfMabar = getString("nameOfMabar") ?: "-",
+    totalPlayers = getLong("totalPlayers")?.toInt() ?: 0,
+    totalCourts = getLong("totalCourts")?.toInt() ?: 0,
+    totalTime = getLong("totalTime")?.toInt() ?: 0,
+    matchDuration = getLong("matchDuration")?.toInt() ?: 0,
+    createdAtFormatted = convertTimestampToDate(getLong("createdAt") ?: 0)
+)
+
 
 fun DocumentSnapshot.toCourtMatch(): CourtMatch? {
     val courtNumber = this.getLong("courtNumber")?.toInt() ?: return null
