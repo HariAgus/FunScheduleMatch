@@ -2,6 +2,7 @@ package com.fbb.funapp.presentation.screen.match
 
 import android.annotation.SuppressLint
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,6 +42,8 @@ import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 import com.fbb.funapp.utils.AnimatedPreloader
+import com.fbb.funapp.utils.randomLoadingText
+import com.fbb.funapp.utils.randomLoadingTitle
 import kotlinx.coroutines.delay
 import java.util.UUID
 
@@ -87,173 +89,182 @@ fun CreateMatchScreen(
         }
     }
 
-    when (state) {
-        is MatchScheduleState.Loading -> {
-            onBottomBarVisibilityChanged(false)
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(BackgroundColorWhite)
-            ) {
-                Column(
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
+    Crossfade(targetState = state, label = "MatchScheduleStateTransition") { currentState ->
+        when (currentState) {
+            is MatchScheduleState.Loading -> {
+                onBottomBarVisibilityChanged(false)
 
-                    AnimatedPreloader(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .size(200.dp)
-                    )
+                val loadingTitle = remember { randomLoadingTitle() }
+                val loadingDescription = remember { randomLoadingText() }
 
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = "Sabar yaa....",
-                        style = TypographyStyle.titleLarge.copy(
-                            fontSize = 22.sp,
-                            color = TextColorPrimary
-                        )
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .padding(horizontal = 32.dp),
-                        text = "Aku lagi buatin match yang cocok dan adil buat kamu",
-                        style = TypographyStyle.bodySmall.copy(
-                            fontSize = 16.sp,
-                            color = TextColorPrimary
-                        ),
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-        }
-
-        is MatchScheduleState.Error -> {}
-
-        is MatchScheduleState.Idle -> {
-            onBottomBarVisibilityChanged(true)
-
-            Scaffold(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(top = 32.dp),
-                contentWindowInsets = WindowInsets(0, 0, 0, 0),
-                containerColor = BackgroundColorWhite
-            ) {
-                Column(
-                    modifier = Modifier
+                Box(
+                    modifier = modifier
                         .fillMaxSize()
-                        .padding(horizontal = 14.dp)
+                        .background(BackgroundColorWhite)
                 ) {
-                    Text(
-                        modifier = Modifier.padding(top = 24.dp),
-                        text = "Create Match",
-                        style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
-                    )
-
-                    Text(
-                        text = "Please fill in the match details",
-                        style = TypographyStyle.bodySmall.copy(color = TextColorPrimary)
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
                     Column(
-                        modifier = Modifier
-                            .verticalScroll(state = rememberScrollState())
-                            .imePadding()
+                        modifier = Modifier.align(Alignment.Center)
                     ) {
-                        MyTextFieldTitle(
-                            labelText = "",
-                            title = "Name of MABAR",
-                            icon = R.drawable.ic_title,
-                            keyboardType = KeyboardType.Text,
-                            text = nameOfMabar,
-                            onValueChange = {
-                                if (it.length <= 32) {
-                                    nameOfMabar = it
-                                }
-                            }
-                        )
 
-                        MyTextFieldTitle(
-                            title = "Number of Courts",
-                            icon = R.drawable.ic_cards,
-                            keyboardType = KeyboardType.Number,
-                            text = court,
-                            onValueChange = {
-                                if (it.all { char -> char.isDigit() }) {
-                                    court = it
-                                }
-                            }
-                        )
-
-                        MyTextFieldTitle(
-                            title = "Players",
-                            icon = R.drawable.ic_group,
-                            keyboardType = KeyboardType.Number,
-                            text = players,
-                            onValueChange = {
-                                players = it
-                            }
-                        )
-
-                        MyTextFieldTitle(
-                            title = "Total Time (Minutes)",
-                            icon = R.drawable.ic_time,
-                            keyboardType = KeyboardType.Number,
-                            text = totalTime,
-                            onValueChange = {
-                                totalTime = it
-                            }
-                        )
-
-                        MyTextFieldTitle(
-                            title = "Duration per Match (Minutes)",
-                            icon = R.drawable.ic_timer,
-                            keyboardType = KeyboardType.Number,
-                            text = durationPerMatch,
-                            onValueChange = {
-                                durationPerMatch = it
-                            }
-                        )
-
-                        // Spacer(modifier = Modifier.height(24.dp))
-
-                        Spacer(modifier = Modifier.weight(1f))
-
-                        Button(
+                        AnimatedPreloader(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            enabled = isFormValid,
-                            shape = RoundedCornerShape(8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = BackgroundColorBlue,
-                                disabledContainerColor = Color.LightGray
-                            ),
-                            onClick = {
-                                sessionId = UUID.randomUUID().toString()
-                                viewModel.createSchedule(
-                                    sessionId = sessionId,
-                                    nameOfMabar = nameOfMabar,
-                                    playerCount = players.toInt(),
-                                    courts = court.toInt(),
-                                    totalTime = totalTime.toInt(),
-                                    durationPerMatch = durationPerMatch.toInt()
-                                )
-                            }
-                        ) {
-                            Text(text = "Create Match")
-                        }
+                                .align(Alignment.CenterHorizontally)
+                                .size(200.dp),
+                            lottieRes = R.raw.lottie_cat_dance
+                        )
 
-                        Spacer(modifier = Modifier.height(32.dp))
+                        Text(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            text = loadingTitle,
+                            style = TypographyStyle.titleLarge.copy(
+                                fontSize = 22.sp,
+                                color = TextColorPrimary
+                            ),
+                            textAlign = TextAlign.Center
+                        )
+
+                        Text(
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(horizontal = 32.dp)
+                                .padding(top = 6.dp),
+                            text = loadingDescription,
+                            style = TypographyStyle.bodySmall.copy(
+                                fontSize = 16.sp,
+                                color = TextColorPrimary
+                            ),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
-        }
 
-        else -> {}
+            is MatchScheduleState.Error -> {}
+
+            is MatchScheduleState.Idle -> {
+                onBottomBarVisibilityChanged(true)
+
+                Scaffold(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(top = 32.dp),
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
+                    containerColor = BackgroundColorWhite
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 14.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(top = 24.dp),
+                            text = "Create Match",
+                            style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
+                        )
+
+                        Text(
+                            text = "Please fill in the match details",
+                            style = TypographyStyle.bodySmall.copy(color = TextColorPrimary)
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(state = rememberScrollState())
+                                .imePadding()
+                        ) {
+                            MyTextFieldTitle(
+                                labelText = "",
+                                title = "Name of MABAR",
+                                icon = R.drawable.ic_title,
+                                keyboardType = KeyboardType.Text,
+                                text = nameOfMabar,
+                                onValueChange = {
+                                    if (it.length <= 32) {
+                                        nameOfMabar = it
+                                    }
+                                }
+                            )
+
+                            MyTextFieldTitle(
+                                title = "Number of Courts",
+                                icon = R.drawable.ic_cards,
+                                keyboardType = KeyboardType.Number,
+                                text = court,
+                                onValueChange = {
+                                    if (it.all { char -> char.isDigit() }) {
+                                        court = it
+                                    }
+                                }
+                            )
+
+                            MyTextFieldTitle(
+                                title = "Players",
+                                icon = R.drawable.ic_group,
+                                keyboardType = KeyboardType.Number,
+                                text = players,
+                                onValueChange = {
+                                    players = it
+                                }
+                            )
+
+                            MyTextFieldTitle(
+                                title = "Total Time (Minutes)",
+                                icon = R.drawable.ic_time,
+                                keyboardType = KeyboardType.Number,
+                                text = totalTime,
+                                onValueChange = {
+                                    totalTime = it
+                                }
+                            )
+
+                            MyTextFieldTitle(
+                                title = "Duration per Match (Minutes)",
+                                icon = R.drawable.ic_timer,
+                                keyboardType = KeyboardType.Number,
+                                text = durationPerMatch,
+                                onValueChange = {
+                                    durationPerMatch = it
+                                }
+                            )
+
+                            // Spacer(modifier = Modifier.height(24.dp))
+
+                            Spacer(modifier = Modifier.weight(1f))
+
+                            Button(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(48.dp),
+                                enabled = isFormValid,
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = BackgroundColorBlue,
+                                    disabledContainerColor = Color.LightGray
+                                ),
+                                onClick = {
+                                    sessionId = UUID.randomUUID().toString()
+                                    viewModel.createSchedule(
+                                        sessionId = sessionId,
+                                        nameOfMabar = nameOfMabar,
+                                        playerCount = players.toInt(),
+                                        courts = court.toInt(),
+                                        totalTime = totalTime.toInt(),
+                                        durationPerMatch = durationPerMatch.toInt()
+                                    )
+                                }
+                            ) {
+                                Text(text = "Create Match")
+                            }
+
+                            Spacer(modifier = Modifier.height(32.dp))
+                        }
+                    }
+                }
+            }
+
+            else -> {}
+        }
     }
 }

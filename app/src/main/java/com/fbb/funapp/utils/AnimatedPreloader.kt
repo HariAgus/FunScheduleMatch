@@ -11,11 +11,9 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.fbb.funapp.R
 
 @Composable
-fun AnimatedPreloader(modifier: Modifier = Modifier) {
+fun AnimatedPreloader(modifier: Modifier = Modifier, lottieRes: Int) {
     val preloaderLottieComposition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(
-            R.raw.lottie_cat_dance
-        )
+        spec = LottieCompositionSpec.RawRes(lottieRes)
     )
 
     val preloaderProgress by animateLottieCompositionAsState(
