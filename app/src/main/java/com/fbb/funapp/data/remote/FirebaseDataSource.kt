@@ -118,16 +118,6 @@ class FirebaseDataSource {
         )
     }
 
-    suspend fun getTeams(sessionId: String): List<Team> = withContext(Dispatchers.IO) {
-        val teamsSnapshot = firestore.collection("sessions")
-            .document(sessionId)
-            .collection("teams")
-            .get()
-            .await()
-
-        teamsSnapshot.documents.mapNotNull { it.toTeam() }
-    }
-
     suspend fun getMatchRounds(sessionId: String): List<MatchRound> = coroutineScope {
         val roundsSnapshot = firestore.collection("sessions")
             .document(sessionId)

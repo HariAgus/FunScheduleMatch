@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.domain.model.Session
-import com.fbb.funapp.domain.model.Team
 import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
 import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
@@ -58,9 +57,6 @@ class MatchViewModel @Inject constructor(
 
     private val _session = mutableStateOf(Session())
     val session: State<Session> = _session
-
-    private val _teams = mutableStateOf<List<Team>>(emptyList())
-    val teams: State<List<Team>> = _teams
 
     private val _matchRounds = mutableStateOf<List<MatchRound>>(emptyList())
     val matchRounds: State<List<MatchRound>> = _matchRounds

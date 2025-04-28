@@ -8,7 +8,6 @@ import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
 import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
 import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
 import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
-import com.fbb.funapp.domain.usecase.match.GetTeamsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +32,6 @@ object AppModule {
         generateMatchUseCase = GenerateMatchUseCase(repository = repository),
         getHistorySessionUseCase = GetHistorySessionUseCase(repository = repository),
         getSessionByIdUseCase = GetSessionByIdUseCase(repository = repository),
-        getTeamsUseCase = GetTeamsUseCase(repository = repository),
         getMatchesUseCase = GetMatchRoundUseCase(repository = repository)
     )
 
