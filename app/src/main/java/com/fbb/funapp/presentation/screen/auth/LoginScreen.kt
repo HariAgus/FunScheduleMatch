@@ -60,6 +60,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             MyTextFieldTitle(
                 labelText = "",
                 title = "Username or Email",
+                placeholderText = "Enter your username or email",
                 icon = R.drawable.ic_title,
                 keyboardType = KeyboardType.Text,
                 text = userName,
@@ -71,6 +72,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             MyTextFieldTitle(
                 labelText = "",
                 title = "Password",
+                placeholderText = "Enter your password",
                 icon = R.drawable.ic_lock,
                 keyboardType = KeyboardType.Password,
                 text = password,
