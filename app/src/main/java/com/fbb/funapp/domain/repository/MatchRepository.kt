@@ -12,6 +12,5 @@ interface MatchRepository {
     suspend fun saveMatchRound(sessionId: String, roundNumber: Int, matches: List<CourtMatch>)
     suspend fun getHistorySession(): List<Session>
     suspend fun getSessionById(sessionId: String): Session
-    suspend fun getTeams(sessionId: String): List<Team>
     suspend fun getMatchRounds(sessionId: String): List<MatchRound>
 }
