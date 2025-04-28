@@ -244,7 +244,6 @@ fun CreateMatchScreen(
                                 readOnly = true,
                                 enabled = false,
                                 onClickField = {
-                                    Log.d("DATE_PICKER", "Clicked!")
                                     showDate.value = true
                                 }
                             )

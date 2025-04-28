@@ -1,20 +1,22 @@
 package com.fbb.funapp.presentation.screen.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,13 +35,18 @@ import com.fbb.funapp.presentation.components.MyTextFieldTitle
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
+import com.fbb.funapp.presentation.ui.theme.TextColorSubTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun RegisterScreen(modifier: Modifier = Modifier) {
 
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    val genderOptions = listOf("Male", "Female")
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(genderOptions[0]) }
 
     Box(
         modifier = modifier
@@ -54,30 +60,16 @@ fun LoginScreen(modifier: Modifier = Modifier) {
         ) {
             Text(
                 modifier = Modifier.padding(top = 24.dp),
-                text = "Login",
+                text = "Register",
                 style = TypographyStyle.titleLarge.copy(fontSize = 22.sp, color = TextColorPrimary)
             )
 
             Text(
-                text = "Please fill in your details to login",
+                text = "Please fill in your details to register",
                 style = TypographyStyle.bodySmall.copy(color = TextColorPrimary)
             )
-        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Image(
-                modifier = Modifier
-                    .size(110.dp)
-                    .padding(2.dp),
-                painter = painterResource(id = R.drawable.icon_schedule_blue),
-                contentDescription = ""
-            )
+            Spacer(modifier = Modifier.height(32.dp))
 
             MyTextFieldTitle(
                 labelText = "",
@@ -92,7 +84,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             )
 
             MyTextFieldTitle(
-                labelText = "",
                 title = "Password",
                 placeholderText = "Enter your password",
                 icon = R.drawable.ic_lock,
@@ -100,6 +91,63 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 text = password,
                 onValueChange = {
                     password = it
+                }
+            )
+
+            MyTextFieldTitle(
+                title = "Confirm Password",
+                placeholderText = "Enter your confirm password",
+                icon = R.drawable.ic_lock,
+                keyboardType = KeyboardType.Password,
+                text = confirmPassword,
+                onValueChange = {
+                    confirmPassword = it
+                }
+            )
+
+            Text(
+                text = "Gender",
+                style = MaterialTheme.typography.labelLarge.copy(color = TextColorPrimary)
+            )
+
+            Row(
+                modifier = Modifier.padding(top = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                genderOptions.forEach { text ->
+                    Row {
+                        RadioButton(
+                            colors = RadioButtonColors(
+                                selectedColor = BackgroundColorBlue,
+                                disabledSelectedColor = BackgroundColorBlue,
+                                disabledUnselectedColor = TextColorSubTitleGray,
+                                unselectedColor = Color.Gray
+                            ),
+                            selected = (text == selectedOption),
+                            onClick = null
+                        )
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 6.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            MyTextFieldTitle(
+                title = "Level",
+                placeholderText = "Select Your Level",
+                icon = R.drawable.ic_arrow_drop_down,
+                keyboardType = KeyboardType.Password,
+                text = password,
+                onValueChange = {
+
+                },
+                onClickField = {
+
                 }
             )
 
@@ -118,8 +166,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
                 }
             ) {
-                Text(text = "Login")
-
+                Text(text = "Register")
             }
 
             Row(
@@ -129,7 +176,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Don't have an account? ",
+                    text = "Already have an account? ",
                     style = TypographyStyle.labelMedium
                 )
 
@@ -138,16 +185,17 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         .clickable {
                             // TODO: Navigation to Login
                         },
-                    text = "Register",
+                    text = "Login",
                     style = TypographyStyle.labelMedium.copy(color = BackgroundColorBlue)
                 )
             }
+
         }
     }
 }
 
 @Preview
 @Composable
-private fun LoginScreenPreview() {
-    LoginScreen()
+private fun RegisterScreenPreview() {
+    RegisterScreen()
 }
