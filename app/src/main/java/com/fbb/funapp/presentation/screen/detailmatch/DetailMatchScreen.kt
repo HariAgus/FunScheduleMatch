@@ -3,7 +3,6 @@ package com.fbb.funapp.presentation.screen.detailmatch
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,9 +42,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fbb.funapp.presentation.components.CardFormResult
 import com.fbb.funapp.presentation.components.CardMatchSchedule
-import com.fbb.funapp.presentation.screen.match.DetailScheduleState
-import com.fbb.funapp.presentation.screen.match.MatchRoundState
-import com.fbb.funapp.presentation.screen.match.MatchViewModel
+import com.fbb.funapp.presentation.viewmodel.DetailScheduleState
+import com.fbb.funapp.presentation.viewmodel.MatchRoundState
+import com.fbb.funapp.presentation.viewmodel.MatchViewModel
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.BgColorWhiteSecond

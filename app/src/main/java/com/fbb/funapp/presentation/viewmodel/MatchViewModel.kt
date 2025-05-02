@@ -1,4 +1,4 @@
-package com.fbb.funapp.presentation.screen.match
+package com.fbb.funapp.presentation.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fbb.funapp.domain.model.MatchRound
 import com.fbb.funapp.domain.model.Session
-import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
-import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
-import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
-import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
+import com.fbb.funapp.domain.usecase.matchs.GenerateMatchUseCase
+import com.fbb.funapp.domain.usecase.matchs.GetHistorySessionUseCase
+import com.fbb.funapp.domain.usecase.matchs.GetMatchRoundUseCase
+import com.fbb.funapp.domain.usecase.matchs.GetSessionByIdUseCase
 import com.fbb.funapp.utils.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

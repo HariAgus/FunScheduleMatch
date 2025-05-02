@@ -1,4 +1,4 @@
-package com.fbb.funapp.domain.usecase.match
+package com.fbb.funapp.domain.usecase.matchs
 
 import com.fbb.funapp.domain.model.CourtMatch
 import com.fbb.funapp.domain.model.MatchRound

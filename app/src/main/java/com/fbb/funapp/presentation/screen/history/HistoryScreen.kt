@@ -30,15 +30,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fbb.funapp.R
 import com.fbb.funapp.presentation.components.HistoryCard
-import com.fbb.funapp.presentation.screen.match.HistoryScheduleState
-import com.fbb.funapp.presentation.screen.match.MatchViewModel
+import com.fbb.funapp.presentation.viewmodel.HistoryScheduleState
+import com.fbb.funapp.presentation.viewmodel.MatchViewModel
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 import com.fbb.funapp.utils.AnimatedPreloader
 import com.fbb.funapp.utils.randomEmptyStateTitle
-import com.fbb.funapp.utils.randomLoadingTitle
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

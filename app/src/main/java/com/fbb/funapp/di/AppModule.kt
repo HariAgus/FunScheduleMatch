@@ -4,10 +4,10 @@ import com.fbb.funapp.data.remote.FirebaseDataSource
 import com.fbb.funapp.data.repository.MatchRepositoryImpl
 import com.fbb.funapp.domain.repository.MatchRepository
 import com.fbb.funapp.domain.usecase.MatchUseCases
-import com.fbb.funapp.domain.usecase.match.GenerateMatchUseCase
-import com.fbb.funapp.domain.usecase.match.GetHistorySessionUseCase
-import com.fbb.funapp.domain.usecase.match.GetMatchRoundUseCase
-import com.fbb.funapp.domain.usecase.match.GetSessionByIdUseCase
+import com.fbb.funapp.domain.usecase.matchs.GenerateMatchUseCase
+import com.fbb.funapp.domain.usecase.matchs.GetHistorySessionUseCase
+import com.fbb.funapp.domain.usecase.matchs.GetMatchRoundUseCase
+import com.fbb.funapp.domain.usecase.matchs.GetSessionByIdUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,7 +1,6 @@
 package com.fbb.funapp.presentation.screen.match
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -48,6 +47,8 @@ import com.fbb.funapp.presentation.ui.theme.BackgroundColorBlue
 import com.fbb.funapp.presentation.ui.theme.BackgroundColorWhite
 import com.fbb.funapp.presentation.ui.theme.TextColorPrimary
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
+import com.fbb.funapp.presentation.viewmodel.MatchScheduleState
+import com.fbb.funapp.presentation.viewmodel.MatchViewModel
 import com.fbb.funapp.utils.AnimatedPreloader
 import com.fbb.funapp.utils.randomLoadingText
 import com.fbb.funapp.utils.randomLoadingTitle
