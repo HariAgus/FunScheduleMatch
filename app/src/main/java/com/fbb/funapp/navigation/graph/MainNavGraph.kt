@@ -15,7 +15,7 @@ import com.fbb.funapp.navigation.screen.Screen
 import com.fbb.funapp.presentation.screen.detailmatch.DetailMatchScreen
 import com.fbb.funapp.presentation.screen.history.HistoryScreen
 import com.fbb.funapp.presentation.screen.match.CreateMatchScreen
-import com.fbb.funapp.presentation.screen.match.MatchViewModel
+import com.fbb.funapp.presentation.viewmodel.MatchViewModel
 import com.fbb.funapp.utils.Constant
 
 @Composable

@@ -73,9 +73,21 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 
             MyTextFieldTitle(
                 labelText = "",
+                title = "Nama",
+                placeholderText = "Enter your name",
+                icon = R.drawable.ic_person,
+                keyboardType = KeyboardType.Text,
+                text = userName,
+                onValueChange = {
+                    userName = it
+                }
+            )
+
+            MyTextFieldTitle(
+                labelText = "",
                 title = "Username or Email",
                 placeholderText = "Enter your username or email",
-                icon = R.drawable.ic_person,
+                icon = R.drawable.ic_mail,
                 keyboardType = KeyboardType.Text,
                 text = userName,
                 onValueChange = {
