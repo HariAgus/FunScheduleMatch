@@ -40,3 +40,9 @@
 ```
 2. Open the project in Android Studio.
 3. Synchronize Gradle and run the app on your emulator/device.
+  
+## License
+
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
+This project is licensed under the [MIT License](LICENSE).
