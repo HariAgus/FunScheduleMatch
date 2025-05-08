@@ -29,6 +29,7 @@ fun DocumentSnapshot.toTeam(): Team? {
     }
 }
 
+
 fun DocumentSnapshot.toSession(): Session = Session(
     id = id,
     nameOfMabar = getString("nameOfMabar") ?: "-",
