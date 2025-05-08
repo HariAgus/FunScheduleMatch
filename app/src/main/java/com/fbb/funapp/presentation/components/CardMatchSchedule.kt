@@ -24,7 +24,7 @@ import com.fbb.funapp.presentation.ui.theme.TextColorSubTitleGray
 import com.fbb.funapp.presentation.ui.theme.TypographyStyle
 
 @Composable
-fun CardMatchSchedule(modifier: Modifier = Modifier, matchRound: MatchRound, matchNumber: String) {
+fun CardMatchSchedule(modifier: Modifier = Modifier, matchRound: MatchRound) {
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -51,7 +51,6 @@ fun CardMatchSchedule(modifier: Modifier = Modifier, matchRound: MatchRound, mat
                     FieldMatchSchedule(court = court)
                 }
             }
-
         }
     }
 }
