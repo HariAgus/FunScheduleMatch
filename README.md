@@ -13,6 +13,35 @@
 
 ---
 
+## 🔮 Next Features (TODO)
+
+### 🧑‍🤝‍🧑 Group & Player Management
+- [ ] **create/join group** feature for playing community
+- [ ] Player invitation via group link
+- [ ] Active player list & match history
+
+### 📅 Advanced Scheduling
+- [ ] Play time preference (morning/afternoon/evening)
+- [ ] Automatic scheduling based on availability
+- [ ] Match reminder notifications
+
+### 🏅 Statistics & Leaderboard
+- [ ] Match score input
+- [ ] Weekly/monthly leaderboard
+- [ ] Personal statistics (win rate, total matches)
+
+### 🔐 User Authentication & Role
+- [ ] Firebase login (Google/email)
+- [ ] User role: admin, member, guest
+- [ ] Access rights based on role
+
+### 🎨 UI/UX improvements
+- [ ] Dark theme (Dark mode)
+- [ ] Transition animation
+- Multi-language support (ID/EN)
+
+---
+
 ## 🛠️ Technology Use
 
 - Kotlin
