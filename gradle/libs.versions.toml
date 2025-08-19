@@ -15,6 +15,7 @@ navigationCompose = "2.8.9"
 gms = "4.4.2"
 hilt = "2.50"
 composeMaterial3 = "1.3.1"
+dataStore = "1.1.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,6 +41,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3",
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStore" }
+datastore-preferencesRxJava3 = { module = "androidx.datastore:datastore-preferences-rxjava3", version.ref = "dataStore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
