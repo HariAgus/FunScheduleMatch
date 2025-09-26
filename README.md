@@ -41,7 +41,7 @@
 ### 🎨 UI/UX improvements
 - [ ] Dark theme (Dark mode)
 - [ ] Transition animation
-- Multi-language support (ID/EN)
+- [ ] Multi-language support (ID/EN)
 
 ---
 
