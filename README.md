@@ -51,8 +51,10 @@
 - Kotlin
 - Jetpack Compose
 - Android Jetpack Libraries (Navigation, ViewModel, LiveData)
-- Material 3
+- Material3
 - Firebase / Firestore
+- Dagger Hilt
+- Lottie
 
 ---
 
