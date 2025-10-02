@@ -13,6 +13,7 @@
 - 📅 Match scheduling with interactive UI
 - ⚡ Navigate between screens with Navigation Component
 - ⌛ Realtime schedule
+- 🔀 Player shuffling
 - ⏭️ And many others
 
 ---
