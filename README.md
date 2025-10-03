@@ -56,6 +56,7 @@
 - Firebase / Firestore
 - Dagger Hilt
 - Lottie
+- Navigation Compose
 
 ---
 
