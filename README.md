@@ -57,6 +57,7 @@
 - Dagger Hilt
 - Lottie
 - Navigation Compose
+- DataStore
 
 ---
 
