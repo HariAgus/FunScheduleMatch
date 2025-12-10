@@ -4,6 +4,7 @@
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?logo=jetpackcompose&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Lottie](https://img.shields.io/badge/Lottie-00D1F2?logo=lottie&logoColor=white)
 
 📱 FunScheduleMatch (or FunApp) is an Android mobile application designed to make it easier for users to schedule matches, especially for doubles badminton games. The app delivers a practical, efficient and fun scheduling experience - perfect for use within a community or regular playgroup.
 
